@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <style>
+      .form-login {
+          width: 100%;
+          max-width: 500px;
+          padding-top: 150px;
+          margin: auto;
+      }
+
+      .form-login .checkbox {
+          font-weight: 400;
+      }
+
+      .form-login .form-control {
+          position: relative;
+          box-sizing: border-box;
+          height: auto;
+          padding: 10px;
+          font-size: 16px;
+      }
+
+      .form-login .form-control:focus {
+          z-index: 2;
+      }
+
+      .form-login input[type="email"] {
+          margin-bottom: -1px;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+      }
+
+      .form-login input[type="password"] {
+          margin-bottom: 10px;
+          border-top-left-radius: 0;
+          border-top-right-radius: 0;
+      }
+  </style>
+
+  <main class="form-login text-center">
+    <form method="POST" action="/login">
+      <h1 class="h3 mb-3 fw-normal">Sign In</h1>
+      <label for="email" class="visually-hidden">Email address</label>
+      <input type="email" id="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+
+      <label for="password" class="visually-hidden">Password</label>
+      <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+
+      <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember"> Remember me
+        </label>
+      </div>
+
+      <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+    </form>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <br><br>
+        <div class="alert alert-danger" role="alert">
+          {{ messages[0] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </main>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row" style="padding-top: 50px;">
+  <div class="col">
+    <div class="row d-flex justify-content-between">
+      <div class="col d-flex justify-content-start">
+        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Order actions">
+          <button type="button" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#order-actions">
+            <i class="bi bi-plus"></i></button>
+        </div>
+        <div data-bs-toggle="tooltip" data-bs-placement="top" title="Ticker info">
+          <button type="button" class="btn btn-outline-primary me-1" data-bs-toggle="modal" data-bs-target="#ticker-info">
+            <i class="bi bi-info"></i></button>
+        </div>
+        <div data-bs-toggle="tooltip" data-bs-placement="top" title="New ticker">
+          <a type="" class="btn btn-outline-success" href="/new-ticker"><i class="bi bi-arrow-repeat"></i></a>
+        </div>
+      </div>
+      <div class="col d-flex justify-content-center">
+        <button type="button" class="btn btn-outline-primary me-1" id="pills-15min-tab">15 min</button>
+        <button type="button" class="btn btn-outline-primary me-1 active" id="pills-1h-tab">1 h</button>
+        <button type="button" class="btn btn-outline-primary" id="pills-1d-tab">Daily</button>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <button type="button" class="btn btn-outline-primary" id="pills-right-tab"><i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <hr>
+        <div id="ohlc-div" style="height: 1000px; max-width: 100%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="order-actions" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="place-order" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Actions for: {{ ticker_data.get('ticker_name') }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-5">
+              <form action="" id="place-order-form">
+                <div class="mb-3">
+                  <select class="form-select" id="order_type" name="order_type" required>
+                    <option selected disabled value="">Order type</option>
+                    <option value="LONG">LONG</option>
+                    <option value="SHORT">SHORT</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <input class="form-control" placeholder="Price" id="price" name="price" step="any" type="number" min="0.1" data-bind="value:price" required>
+                </div>
+                <div class="mb-3">
+                  <input class="form-control" placeholder="Order size" id="order_size" name="order_size" type="number" min="1" data-bind="value:order_size" required>
+                </div>
+                <div class="mb-3">
+                  <input class="form-control" placeholder="Take profit" id="take_profit" name="take_profit" type="number" step="any" min="0.1" data-bind="value:take_profit" required>
+                </div>
+                <div class="mb-3">
+                  <input class="form-control" placeholder="Stop loss" id="stop_loss" name="stop_loss" type="number" step="any" min="0.1" data-bind="value:stop_loss" required>
+                </div>
+                <button id="process-order" type="submit" class="btn btn-primary">Place order</button>
+                <button type="button" class="btn btn-secondary me-1 float-end" id="exit-trade">Exit trade</button>
+              </form>
+            </div>
+            <div class="col">
+              <div id="ok-submit" class="alert alert-primary alert-dismissible fade show" role="alert" style="display: none;">
+                <span id="ok-submit-msg"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+
+              <div id="error-submit" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                <span id="error-submit-msg"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="ticker-info" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="ticker-info" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl" style="max-width:90% !important;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ ticker_data.get('ticker_name') }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-8">
+              <div class="card" id="overview-card" style="display: none">
+                <div class="card-body">
+                  <div id="overview-body"></div>
+                  <div id="ratios-div" style="height: 400px; max-width: 100%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-4">
+              <div class="card"  id="news-card" style="display: none">
+                <div id="news-body" class="card-body">
+                  <h5 class="card-title">News</h5>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/plugins/annotation.js"></script>
+  <script src="{{ url_for('static', filename='dist/js/ohlc-chart.js') }}"></script>
+  <script src="{{ url_for('static', filename='dist/js/statement-ratios-graph.js') }}"></script>
+  {% endblock %}
