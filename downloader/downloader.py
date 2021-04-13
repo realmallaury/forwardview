@@ -52,6 +52,7 @@ class Downloader:
             self.download_status = DownloadStatus()
             self.db.session.add(self.download_status)
             self.db.session.commit()
+            self.db.session.flush()
 
     async def run(self):
         aiocron.crontab("* * * * *", func=self.get_ticker_info_periodic, start=True)
@@ -84,6 +85,7 @@ class Downloader:
 
                 self.download_status.ticker_list_last_download = datetime.now()
                 self.db.session.commit()
+                self.db.session.flush()
             except Exception as e:
                 logging.exception("Exception: %s", e)
                 return
@@ -113,6 +115,7 @@ class Downloader:
 
                 self.download_status.ticker_list_last_update = datetime.now()
                 self.db.session.commit()
+                self.db.session.flush()
                 logging.info(
                     "finished cleaning up ticker list at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
@@ -152,6 +155,7 @@ class Downloader:
                         self.db.session.delete(ticker)
 
                     self.db.session.commit()
+                    self.db.session.flush()
                     logging.info(
                         "finished downloading ticker list at: %s, duration: %s sec"
                         % (datetime.now(), (datetime.now() - start_time).seconds)
@@ -176,7 +180,7 @@ class Downloader:
                 cleanup_folders(self.base_path)
 
                 self.download_status.ticker_ohlc_last_update = datetime.now()
-                self.db.session.commit()
+                self.db.session.flush()
                 logging.info(
                     "finished cleaning up downloaded tickers at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)

@@ -28,7 +28,6 @@ def create_app():
         instance_relative_config=False,
     )
 
-    base_path = os.path.abspath(os.getcwd())
     load_dotenv(path.join(base_path, ".env"))
     app.config.from_object(Config)
 

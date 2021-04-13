@@ -17,6 +17,7 @@ class Accounts:
             )
             db.session.add(account)
             db.session.commit()
+            db.session.flush()
             self.accounts = [account]
 
         self.current_account = (
@@ -55,6 +56,7 @@ class Accounts:
 
         db.session.add(order)
         db.session.commit()
+        db.session.flush()
 
         self.process_order(order_data, df)
 
@@ -158,6 +160,7 @@ class Accounts:
                 )
 
             db.session.commit()
+            db.session.flush()
 
     def _process_short_order(self, order_data, df):
         if order_data.get("order_placed"):
@@ -250,6 +253,7 @@ class Accounts:
                 )
 
             db.session.commit()
+            db.session.flush()
 
     def validate_order(
         self, order_type, entry_price, order_size, take_profit, stop_loss

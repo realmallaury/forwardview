@@ -6,6 +6,7 @@ import shutil
 from datetime import datetime
 from io import BytesIO
 from os import path
+from urllib.parse import urlencode, quote_plus
 
 import backoff
 import numpy as np
@@ -58,10 +59,10 @@ def get_ticker_info(base_path, ticker):
     for key, value in financials.items():
         data_url = (
             "https://www.alphavantage.co/query?function=%s&symbol=%s&apikey=%s"
-            % (value, ticker.ticker_name, api_key())
+            % (value, ticker.ticker_name, alphavantage_api_key())
         )
 
-        resp = get_data(data_url)
+        resp = get_alphavantage_data(data_url)
         overview.update({key: json.loads(resp.content)})
 
     if overview.get("overview").get("Name") and not df.empty and "Date" in df.columns:
@@ -86,9 +87,9 @@ def get_ticker_ohlc(base_path, ticker):
 
     data_url = (
         "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&outputsize=full&datatype=csv&apikey=%s"
-        % (ticker.ticker_name, api_key())
+        % (ticker.ticker_name, alphavantage_api_key())
     )
-    resp = get_data(data_url)
+    resp = get_alphavantage_data(data_url)
     daily_df = pd.read_csv(BytesIO(resp.content), index_col=0)
 
     # rename index
@@ -129,11 +130,11 @@ def get_ticker_ohlc(base_path, ticker):
                     ticker.ticker_name,
                     interval,
                     slice,
-                    api_key(),
+                    alphavantage_api_key(),
                 )
             )
         for data_url in data_urls:
-            resp = get_data(data_url)
+            resp = get_alphavantage_data(data_url)
             intraday_slice_df = pd.read_csv(BytesIO(resp.content), index_col=0)
             intraday_df = intraday_df.append(intraday_slice_df)
 
@@ -165,7 +166,7 @@ def save_ticker_info(base_path, ticker, info):
         pickle.dump(info, f)
 
 
-def api_key():
+def alphavantage_api_key():
     api_keys = [
         "GGW3SH4C64RDZ3B0",
         "6TSSQK5WX9EO9YUG",
@@ -183,7 +184,7 @@ def api_key():
     lambda req: str(req.content).find("Thank you for using Alpha Vantage!") != -1,
     interval=70,
 )
-def get_data(data_url):
+def get_alphavantage_data(data_url):
     return requests.get(data_url)
 
 
