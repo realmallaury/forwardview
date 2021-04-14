@@ -1,22 +1,13 @@
-am4core.ready(function () {
+function createOhlcChart(tickerOhlc) {
+    let ohlcChart = am4core.create("ohlc", am4charts.XYChart);
 
-// Themes begin
-    am4core.useTheme(am4themes_animated);
-// Themes end
-
-    am4core.options.minPolylineStep = 5;
-
-// Create chart
-    var chart = am4core.create("ohlc-div", am4charts.XYChart);
-
-// Load data
-    chart.dateFormatter.inputDateFormat = "YYYY-MM-DDTHH:mm:ss.sssZ";
-    chart.dateFormatter.timezoneOffset = 0;
+    ohlcChart.dateFormatter.inputDateFormat = "YYYY-MM-DDTHH:mm:ss.sssZ";
+    ohlcChart.dateFormatter.timezoneOffset = 0;
 
     // the following line makes value axes to be arranged vertically.
-    chart.leftAxesContainer.layout = "vertical";
+    ohlcChart.leftAxesContainer.layout = "vertical";
 
-    var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+    var dateAxis = ohlcChart.xAxes.push(new am4charts.DateAxis());
     dateAxis.renderer.grid.template.location = 0;
     dateAxis.baseInterval = {
         count: 15,
@@ -35,7 +26,7 @@ am4core.ready(function () {
     dateAxis.keepSelection = true;
     dateAxis.minHeight = 30;
 
-    var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    var valueAxis = ohlcChart.yAxes.push(new am4charts.ValueAxis());
     valueAxis.tooltip.disabled = true;
     valueAxis.zIndex = 1;
     valueAxis.renderer.baseGrid.disabled = true;
@@ -51,7 +42,7 @@ am4core.ready(function () {
     //valueAxis.renderer.maxLabelPosition = 0.95;
     valueAxis.renderer.fontSize = "0.8em"
 
-    var series = chart.series.push(new am4charts.CandlestickSeries());
+    var series = ohlcChart.series.push(new am4charts.CandlestickSeries());
     series.dataFields.dateX = "time";
     series.dataFields.valueY = "close";
     series.dataFields.openValueY = "open";
@@ -60,10 +51,10 @@ am4core.ready(function () {
     series.simplifiedProcessing = true;
     series.tooltipText = "Open:${openValueY.value}\nLow:${lowValueY.value}\nHigh:${highValueY.value}\nClose:${valueY.value}";
 
-    chart.cursor = new am4charts.XYCursor();
-    chart.cursor.behavior = "none";
+    ohlcChart.cursor = new am4charts.XYCursor();
+    ohlcChart.cursor.behavior = "none";
 
-    var valueAxis2 = chart.yAxes.push(new am4charts.ValueAxis());
+    var valueAxis2 = ohlcChart.yAxes.push(new am4charts.ValueAxis());
     valueAxis2.tooltip.disabled = true;
     // height of axis
     valueAxis2.height = am4core.percent(20);
@@ -80,7 +71,7 @@ am4core.ready(function () {
     valueAxis2.renderer.gridContainer.background.fill = am4core.color("#000000");
     valueAxis2.renderer.gridContainer.background.fillOpacity = 0.05;
 
-    var valueAxis3 = chart.yAxes.push(new am4charts.ValueAxis());
+    var valueAxis3 = ohlcChart.yAxes.push(new am4charts.ValueAxis());
     valueAxis3.tooltip.disabled = true;
     // height of axis
     valueAxis3.height = am4core.percent(20);
@@ -99,30 +90,30 @@ am4core.ready(function () {
 
     var scrollbarX = new am4charts.XYChartScrollbar();
 
-    var sbSeries = chart.series.push(new am4charts.LineSeries());
+    var sbSeries = ohlcChart.series.push(new am4charts.LineSeries());
     sbSeries.dataFields.valueY = "close";
     sbSeries.dataFields.dateX = "time";
     scrollbarX.series.push(sbSeries);
     sbSeries.disabled = true;
     scrollbarX.marginBottom = 20;
-    chart.scrollbarX = scrollbarX;
+    ohlcChart.scrollbarX = scrollbarX;
     scrollbarX.scrollbarChart.xAxes.getIndex(0).minHeight = undefined;
 
-    var volume = chart.series.push(new am4charts.ColumnSeries());
+    var volume = ohlcChart.series.push(new am4charts.ColumnSeries());
     volume.dataFields.valueY = "volume";
     volume.dataFields.dateX = "time";
     volume.yAxis = valueAxis3;
     volume.clustered = false;
     volume.groupFields.valueY = "sum";
 
-    var keltnerHBand = chart.series.push(new am4charts.LineSeries());
+    var keltnerHBand = ohlcChart.series.push(new am4charts.LineSeries());
     keltnerHBand.dataFields.valueY = "KELTNER_HBAND";
     keltnerHBand.dataFields.dateX = "time";
     keltnerHBand.yAxis = valueAxis;
     keltnerHBand.cursorTooltipEnabled = false;
     keltnerHBand.stroke = am4core.color("blue").lighten(0.5);
 
-    var keltnerMBand = chart.series.push(new am4charts.LineSeries());
+    var keltnerMBand = ohlcChart.series.push(new am4charts.LineSeries());
     keltnerMBand.dataFields.valueY = "KELTNER_MBAND";
     keltnerMBand.dataFields.dateX = "time";
     keltnerMBand.yAxis = valueAxis;
@@ -130,21 +121,21 @@ am4core.ready(function () {
     keltnerMBand.strokeDasharray = "8,4,2,4";
     keltnerMBand.stroke = am4core.color("blue").lighten(0.5);
 
-    var keltnerLBand = chart.series.push(new am4charts.LineSeries());
+    var keltnerLBand = ohlcChart.series.push(new am4charts.LineSeries());
     keltnerLBand.dataFields.valueY = "KELTNER_LBAND";
     keltnerLBand.dataFields.dateX = "time";
     keltnerLBand.yAxis = valueAxis;
     keltnerLBand.cursorTooltipEnabled = false;
     keltnerLBand.stroke = am4core.color("blue").lighten(0.5);
 
-    var macd = chart.series.push(new am4charts.LineSeries());
+    var macd = ohlcChart.series.push(new am4charts.LineSeries());
     macd.dataFields.valueY = "MACD";
     macd.dataFields.dateX = "time";
     macd.yAxis = valueAxis2;
     macd.cursorTooltipEnabled = false;
     macd.stroke = am4core.color("blue").lighten(0.5);
 
-    var macdSignal = chart.series.push(new am4charts.LineSeries());
+    var macdSignal = ohlcChart.series.push(new am4charts.LineSeries());
     macdSignal.dataFields.valueY = "MACD_SIGNAL";
     macdSignal.dataFields.dateX = "time";
     macdSignal.yAxis = valueAxis2;
@@ -152,7 +143,7 @@ am4core.ready(function () {
     macdSignal.strokeDasharray = "8,4,2,4";
     macdSignal.stroke = am4core.color("blue").lighten(0.5);
 
-    var tradingRange = chart.series.push(new am4charts.LineSeries());
+    var tradingRange = ohlcChart.series.push(new am4charts.LineSeries());
     tradingRange.dataFields.valueY = "STOP_LOSS";
     tradingRange.dataFields.openValueY = "TAKE_PROFIT";
     tradingRange.dataFields.dateX = "time";
@@ -163,121 +154,67 @@ am4core.ready(function () {
     tradingRange.stroke = am4core.color("gray").lighten(0.5);
     tradingRange.strokeOpacity = 0.3;
 
-    $.getJSON("/ticker.json?interval=60min", function (data) {
-        chart.data = data;
-    });
+    ohlcChart.data = tickerOhlc;
 
-    $("#pills-15min-tab").click(function () {
-        if (!$("#pills-15min-tab").hasClass("active")) {
-            $("#pills-15min-tab").toggleClass("active");
-            $("#pills-1h-tab").removeClass("active");
-            $("#pills-1d-tab").removeClass("active");
-        }
+    return ohlcChart;
+}
 
-        $.getJSON("/ticker.json?interval=15min", function (data) {
-            if (!_.isEqual(chart.data, data)) {
-                chart.data = data;
-            }
-        });
-    });
+function updateOhlcChart(ohlcChart, interval, next) {
+    let tabs = ["#pills-tab-15min", "#pills-tab-60min", "#pills-tab-1d"]
+    let url = "/ticker.json?interval=" + interval;
+    if (Boolean(next)) {
+        url = url + "&next=true";
+    }
 
-    $("#pills-1h-tab").click(function () {
-        if (!$("pills-1h-tab").hasClass("active")) {
-            $("#pills-15min-tab").removeClass("active");
-            $("#pills-1h-tab").toggleClass("active");
-            $("#pills-1d-tab").removeClass("active");
-        }
+    axios
+        .get(url)
+        .then(response => {
+            if (!_.isEqual(ohlcChart.data, response.data)) {
+                ohlcChart.data = response.data;
+                // ohlcChart.validateData();
 
-        $.getJSON("/ticker.json?interval=60min", function (data) {
-            if (!_.isEqual(chart.data, data)) {
-                chart.data = data;
-            }
-        });
-    });
-
-    $("#pills-1d-tab").click(function () {
-        if (!$("pills-1d-tab").hasClass("active")) {
-            $("#pills-15min-tab").removeClass("active");
-            $("#pills-1h-tab").removeClass("active");
-            $("#pills-1d-tab").toggleClass("active");
-        }
-
-        $.getJSON("/ticker.json?interval=1d", function (data) {
-            if (!_.isEqual(chart.data, data)) {
-                chart.data = data;
-            }
-        });
-    });
-
-    $("#pills-right-tab").click(function () {
-        if (!$("#pills-1h-tab").hasClass("active")) {
-            $("#pills-15min-tab").removeClass("active");
-            $("#pills-1h-tab").toggleClass("active");
-            $("#pills-1d-tab").removeClass("active");
-        }
-
-        $.getJSON("/ticker.json?interval=60min&next=true", function (data) {
-            if (!_.isEqual(chart.data, data)) {
-                chart.data = data;
-            }
-        });
-    });
-
-    $("#place-order-form").on('submit', function (e) {
-        e.preventDefault();
-
-        order = {
-            "order_type": $("#order_type").val(),
-            "price": $("#price").val(),
-            "order_size": $("#order_size").val(),
-            "take_profit": $("#take_profit").val(),
-            "stop_loss": $("#stop_loss").val(),
-        };
-
-        $.post("/place-order", order)
-            .done(function (r) {
-                $("#ok-submit-msg").text(r.message);
-                $("#ok-submit").show();
-                $("#error-submit").hide();
-
-                $.getJSON("/ticker.json?interval=60min&next=true", function (data) {
-                    if (!_.isEqual(chart.data, data)) {
-                        chart.data = data;
+                _.each(tabs, function (item) {
+                    $(item).removeClass("active");
+                    if ("#pills-tab-" + interval === item) {
+                        $(item).toggleClass("active");
                     }
                 });
-            })
-            .fail(function (r) {
-                $("#error-submit-msg").text(r.responseJSON.message);
+            }
+        })
+}
+
+function placeOrder(ohlcChart, order) {
+    axios
+        .post("/place-order", order)
+        .then(response => {
+            $("#ok-submit-msg").text(response.data.message);
+            $("#ok-submit").show();
+            $("#error-submit").hide();
+
+            updateOhlcChart(ohlcChart, "60min", "true");
+        })
+        .catch(function (error) {
+            if (error.response) {
+                $("#error-submit-msg").text(error.response.data.message);
                 $("#ok-submit").hide();
                 $("#error-submit").show();
-            });
+            }
+        });
+}
 
-        if (!$("#pills-1h-tab").hasClass("active")) {
-            $("#pills-15min-tab").removeClass("active");
-            $("#pills-1h-tab").toggleClass("active");
-            $("#pills-1d-tab").removeClass("active");
-        }
-    });
-
-    $("select[id='order_type']").on("change", function () {
-        if ($(this).val() === "SHORT") {
-            $("input[id='price']").prop("disabled", true);
-        } else {
-            $("input[id='price']").prop("disabled", false);
-        }
-    });
-
-    $("#exit-trade").click(function () {
-        $.getJSON("/exit-trade")
-            .done(function (r) {
-                $("#ok-submit-msg").text(r.message);
-                $("#ok-submit").show();
-                $("#error-submit").hide();
-            })
-            .fail(function (r) {
-                $("#error-submit-msg").text(r.responseJSON.message);
+function exitTrade(ohlcChart, order) {
+    axios
+        .get("/exit-trade", order)
+        .then(response => {
+            $("#ok-submit-msg").text(response.data.message);
+            $("#ok-submit").show();
+            $("#error-submit").hide();
+        })
+        .catch(function (error) {
+            if (error.response) {
+                $("#error-submit-msg").text(error.response.data.message);
                 $("#ok-submit").hide();
                 $("#error-submit").show();
-            });
-    });
-});
+            }
+        });
+}
