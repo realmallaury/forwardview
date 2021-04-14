@@ -152,9 +152,10 @@ class Downloader:
                     .filter(Ticker.downloaded == False)
                     .all()
                 )
-                ticker = random.choice(tickers)
 
-                if ticker:
+                if tickers:
+                    ticker = random.choice(tickers)
+
                     start_time = datetime.now()
                     self.download_status.ticker_ohlc_download_in_progress = True
                     self.db.session.commit()

@@ -43,8 +43,8 @@ def create_app():
     db.init_app(app)
     try:
         db.create_all(app=app)
-    except Exception as e:
-        app.logger.warn(e)
+    except:
+        pass
 
     cache.init_app(app)
 
