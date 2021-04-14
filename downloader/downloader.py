@@ -147,6 +147,10 @@ class Downloader:
         ):
             # if there is error dont update ticker_list_last_download and try again
             try:
+                start_time = datetime.now()
+                self.download_status.ticker_ohlc_download_in_progress = True
+                self.db.session.commit()
+
                 tickers = (
                     self.db.session.query(Ticker)
                     .filter(Ticker.downloaded == False)
@@ -155,10 +159,6 @@ class Downloader:
 
                 if tickers:
                     ticker = random.choice(tickers)
-
-                    start_time = datetime.now()
-                    self.download_status.ticker_ohlc_download_in_progress = True
-                    self.db.session.commit()
 
                     downloaded = get_ticker_info(self.base_path, ticker)
                     if downloaded:
@@ -169,13 +169,13 @@ class Downloader:
                     else:
                         self.db.session.delete(ticker)
 
-                    self.download_status.ticker_ohlc_download_in_progress = False
-                    self.download_status.ticker_ohlc_last_download = datetime.now()
-                    self.db.session.commit()
-                    logging.info(
-                        "finished downloading ticker list at: %s, duration: %s sec"
-                        % (datetime.now(), (datetime.now() - start_time).seconds)
-                    )
+                self.download_status.ticker_ohlc_download_in_progress = False
+                self.download_status.ticker_ohlc_last_download = datetime.now()
+                self.db.session.commit()
+                logging.info(
+                    "finished downloading ticker list at: %s, duration: %s sec"
+                    % (datetime.now(), (datetime.now() - start_time).seconds)
+                )
             except Exception as e:
                 logging.exception("Exception: %s", e)
                 return
