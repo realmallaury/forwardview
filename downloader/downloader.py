@@ -105,14 +105,14 @@ class Downloader:
 
     async def clean_tickers_periodic(self):
         """
-        once every 2 hours check for tickers to cleanup
+        once every 24 hours check for tickers to cleanup
         """
         if (
             not self.download_status.ticker_list_cleanup_in_progress
             and (
                 datetime.now() - self.download_status.ticker_list_last_cleanup
             ).total_seconds()
-            > 2 * 60 * 60
+            > 24 * 60 * 60
         ):
             # if there is error dont update ticker_list_last_update and try again
             try:
@@ -120,11 +120,11 @@ class Downloader:
                 self.download_status.ticker_list_cleanup_in_progress = True
                 self.db.session.commit()
 
-                query_date = (datetime.now() - relativedelta(days=1)).date()
+                query_date = (datetime.now() - relativedelta(days=3)).date()
                 # tickers that are older than 3 days and are not downloaded
                 cleanup_tickers(self.db, query_date, False)
 
-                query_date = (datetime.now() - relativedelta(days=3)).date()
+                query_date = (datetime.now() - relativedelta(days=5)).date()
                 # tickers that are older than 7 days and are downloaded
                 cleanup_tickers(self.db, query_date, True)
 
