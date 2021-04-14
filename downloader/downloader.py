@@ -92,15 +92,16 @@ class Downloader:
 
                 get_ticker_list(self.db)
 
-                self.download_status.ticker_list_download_in_progress = False
-                self.download_status.ticker_list_last_download = datetime.now()
-                self.db.session.commit()
                 logging.info(
                     "finished downloading ticker list at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
             except Exception as e:
                 logging.exception("Exception: %s", e)
+
+            self.download_status.ticker_list_download_in_progress = False
+            self.download_status.ticker_list_last_download = datetime.now()
+            self.db.session.commit()
 
     async def clean_tickers_periodic(self):
         """
@@ -127,15 +128,16 @@ class Downloader:
                 # tickers that are older than 7 days and are downloaded
                 cleanup_tickers(self.db, query_date, True)
 
-                self.download_status.ticker_list_cleanup_in_progress = False
-                self.download_status.ticker_list_last_cleanup = datetime.now()
-                self.db.session.commit()
                 logging.info(
                     "finished cleaning up ticker list at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
             except Exception as e:
                 logging.exception("Exception: %s", e)
+
+            self.download_status.ticker_list_cleanup_in_progress = False
+            self.download_status.ticker_list_last_cleanup = datetime.now()
+            self.db.session.commit()
 
     async def get_ticker_data_periodic(self):
         """
@@ -153,24 +155,20 @@ class Downloader:
             > 60
         ):
             # if there is error dont update ticker_list_last_download and try again
-            try:
-                start_time = datetime.now()
-                self.download_status.ticker_ohlc_download_in_progress = True
-                self.db.session.commit()
 
-                tickers = (
-                    self.db.session.query(Ticker)
-                    .filter(Ticker.downloaded == False)
-                    .all()
-                )
+            start_time = datetime.now()
+            self.download_status.ticker_ohlc_download_in_progress = True
+            self.db.session.commit()
 
-                if tickers:
-                    ticker = random.choice(tickers)
+            tickers = (
+                self.db.session.query(Ticker).filter(Ticker.downloaded == False).all()
+            )
 
-                    logging.info(
-                        "downloading data for ticker: %s" % (ticker.ticker_name)
-                    )
+            if tickers:
+                ticker = random.choice(tickers)
 
+                logging.info("downloading data for ticker: %s" % ticker.ticker_name)
+                try:
                     downloaded = get_ticker_info(self.base_path, ticker)
                     if downloaded:
                         get_ticker_ohlc(self.base_path, ticker)
@@ -188,11 +186,14 @@ class Downloader:
                     else:
                         self.db.session.delete(ticker)
 
-                self.download_status.ticker_ohlc_download_in_progress = False
-                self.download_status.ticker_ohlc_last_download = datetime.now()
-                self.db.session.commit()
-            except Exception as e:
-                logging.exception("Exception: %s", e)
+                except FileExistsError:
+                    self.db.session.delete(ticker)
+                except Exception as e:
+                    logging.exception("Exception: %s", e)
+
+            self.download_status.ticker_ohlc_download_in_progress = False
+            self.download_status.ticker_ohlc_last_download = datetime.now()
+            self.db.session.commit()
 
     async def cleanup_folders_periodic(self):
         """
@@ -213,15 +214,16 @@ class Downloader:
 
                 cleanup_folders(self.base_path)
 
-                self.download_status.ticker_ohlc_cleanup_in_progress = False
-                self.download_status.ticker_ohlc_last_cleanup = datetime.now()
-                self.db.session.commit()
                 logging.info(
                     "finished cleaning up downloaded tickers at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
             except Exception as e:
                 logging.exception("Exception: %s", e)
+
+            self.download_status.ticker_ohlc_cleanup_in_progress = False
+            self.download_status.ticker_ohlc_last_cleanup = datetime.now()
+            self.db.session.commit()
 
 
 d = Downloader()
