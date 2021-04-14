@@ -39,7 +39,6 @@ class Tickers:
             TickerUser(user_id=current_user.id, ticker_name=ticker.ticker_name)
         )
         db.session.commit()
-        db.session.flush()
 
         return ticker
 

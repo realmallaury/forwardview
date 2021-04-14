@@ -42,7 +42,6 @@ def get_ticker_list(db):
                 )
 
     db.session.commit()
-    db.session.flush()
 
 
 def cleanup_tickers(db, query_date, ticker_download_status):
@@ -60,7 +59,6 @@ def cleanup_tickers(db, query_date, ticker_download_status):
         ).delete()
 
     db.session.commit()
-    db.session.flush()
 
 
 def signals():
