@@ -49,7 +49,13 @@ class Downloader:
 
         self.download_status = self.db.session.query(DownloadStatus).first()
         if not self.download_status:
+            init_date = datetime.now() - relativedelta(days=1)
             self.download_status = DownloadStatus()
+            self.download_status.ticker_list_last_download = init_date
+            self.download_status.ticker_list_last_cleanup = init_date
+            self.download_status.ticker_ohlc_last_download = init_date
+            self.download_status.ticker_ohlc_last_cleanup = init_date
+
             self.db.session.add(self.download_status)
             self.db.session.commit()
 
@@ -67,8 +73,8 @@ class Downloader:
         once every 2 hours get new ticker list
         """
         if (
-            not self.download_status.ticker_list_last_download
-            or (
+            not self.download_status.ticker_list_download_in_progress
+            and (
                 datetime.now() - self.download_status.ticker_list_last_download
             ).total_seconds()
             > 2 * 60 * 60
@@ -76,14 +82,18 @@ class Downloader:
             # if there is error dont update ticker_list_last_download and try again
             try:
                 start_time = datetime.now()
+                self.download_status.ticker_list_download_in_progress = True
+                self.db.session.commit()
+
                 get_ticker_list(self.db)
+
+                self.download_status.ticker_list_download_in_progress = False
+                self.download_status.ticker_list_last_download = datetime.now()
+                self.db.session.commit()
                 logging.info(
                     "finished downloading ticker list at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
-
-                self.download_status.ticker_list_last_download = datetime.now()
-                self.db.session.commit()
             except Exception as e:
                 logging.exception("Exception: %s", e)
                 return
@@ -93,16 +103,18 @@ class Downloader:
         once every 2 hours check for tickers to cleanup
         """
         if (
-            (
-                self.download_status.ticker_list_last_download
-                and not self.download_status.ticker_list_last_update
-            )
-        ) or (
-            datetime.now() - self.download_status.ticker_list_last_update
-        ).total_seconds() > 2 * 60 * 60:
+            not self.download_status.ticker_list_cleanup_in_progress
+            and (
+                datetime.now() - self.download_status.ticker_list_last_cleanup
+            ).total_seconds()
+            > 2 * 60 * 60
+        ):
             # if there is error dont update ticker_list_last_update and try again
             try:
                 start_time = datetime.now()
+                self.download_status.ticker_list_cleanup_in_progress = True
+                self.db.session.commit()
+
                 query_date = (datetime.now() - relativedelta(days=1)).date()
                 # tickers that are older than 3 days and are not downloaded
                 cleanup_tickers(self.db, query_date, False)
@@ -111,7 +123,8 @@ class Downloader:
                 # tickers that are older than 7 days and are downloaded
                 cleanup_tickers(self.db, query_date, True)
 
-                self.download_status.ticker_list_last_update = datetime.now()
+                self.download_status.ticker_list_cleanup_in_progress = False
+                self.download_status.ticker_list_last_cleanup = datetime.now()
                 self.db.session.commit()
                 logging.info(
                     "finished cleaning up ticker list at: %s, duration: %s sec"
@@ -126,11 +139,12 @@ class Downloader:
         once every minute download new ticker
         """
         if (
-            self.download_status.ticker_list_last_download
-            and not self.download_status.ticker_ohlc_last_download
-        ) or (
-            datetime.now() - self.download_status.ticker_ohlc_last_download
-        ).total_seconds() > 60:
+            not self.download_status.ticker_ohlc_download_in_progress
+            and (
+                datetime.now() - self.download_status.ticker_ohlc_last_download
+            ).total_seconds()
+            > 60
+        ):
             # if there is error dont update ticker_list_last_download and try again
             try:
                 tickers = (
@@ -142,17 +156,20 @@ class Downloader:
 
                 if ticker:
                     start_time = datetime.now()
+                    self.download_status.ticker_ohlc_download_in_progress = True
+                    self.db.session.commit()
+
                     downloaded = get_ticker_info(self.base_path, ticker)
                     if downloaded:
                         get_ticker_ohlc(self.base_path, ticker)
                         ticker.date_added = datetime.now()
                         ticker.downloaded = True
                         self.db.session.merge(ticker)
-
-                        self.download_status.ticker_ohlc_last_download = datetime.now()
                     else:
                         self.db.session.delete(ticker)
 
+                    self.download_status.ticker_ohlc_download_in_progress = False
+                    self.download_status.ticker_ohlc_last_download = datetime.now()
                     self.db.session.commit()
                     logging.info(
                         "finished downloading ticker list at: %s, duration: %s sec"
@@ -167,17 +184,23 @@ class Downloader:
         once every 24 hours clean old folders
         """
         if (
-            self.download_status.ticker_list_last_download
-            and not self.download_status.ticker_ohlc_last_update
-        ) or (
-            datetime.now() - self.download_status.ticker_ohlc_last_update
-        ).total_seconds() > 24 * 60 * 60:
+            self.download_status.ticker_ohlc_cleanup_in_progress
+            and (
+                datetime.now() - self.download_status.ticker_ohlc_last_cleanup
+            ).total_seconds()
+            > 24 * 60 * 60
+        ):
             # if there is error dont update ticker_list_last_download and try again
             try:
                 start_time = datetime.now()
+                self.download_status.ticker_ohlc_cleanup_in_progress = True
+                self.db.session.commit()
+
                 cleanup_folders(self.base_path)
 
-                self.download_status.ticker_ohlc_last_update = datetime.now()
+                self.download_status.ticker_ohlc_cleanup_in_progress = False
+                self.download_status.ticker_ohlc_last_cleanup = datetime.now()
+                self.db.session.commit()
                 logging.info(
                     "finished cleaning up downloaded tickers at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)

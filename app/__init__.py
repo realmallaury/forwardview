@@ -41,7 +41,10 @@ def create_app():
 
     install_as_MySQLdb()
     db.init_app(app)
-    db.create_all(app=app)
+    try:
+        db.create_all(app=app)
+    except Exception as e:
+        app.logger.warn(e)
 
     cache.init_app(app)
 

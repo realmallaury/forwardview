@@ -82,7 +82,12 @@ class TickerUser(db.Model):
 class DownloadStatus(db.Model):
     __tablename__ = "download_status"
     id = db.Column(db.Integer, primary_key=True)
-    ticker_list_last_download = db.Column(db.DateTime, nullable=True)
-    ticker_list_last_update = db.Column(db.DateTime, nullable=True)
-    ticker_ohlc_last_download = db.Column(db.DateTime, nullable=True)
-    ticker_ohlc_last_update = db.Column(db.DateTime, nullable=True)
+    ticker_list_last_download = db.Column(db.DateTime, nullable=False)
+    ticker_list_last_cleanup = db.Column(db.DateTime, nullable=False)
+    ticker_ohlc_last_download = db.Column(db.DateTime, nullable=False)
+    ticker_ohlc_last_cleanup = db.Column(db.DateTime, nullable=False)
+
+    ticker_list_download_in_progress = db.Column(db.Boolean, default=False)
+    ticker_list_cleanup_in_progress = db.Column(db.Boolean, default=False)
+    ticker_ohlc_download_in_progress = db.Column(db.Boolean, default=False)
+    ticker_ohlc_cleanup_in_progress = db.Column(db.Boolean, default=False)
