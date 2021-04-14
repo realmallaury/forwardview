@@ -55,12 +55,17 @@ class Downloader:
             self.download_status.ticker_list_last_cleanup = init_date
             self.download_status.ticker_ohlc_last_download = init_date
             self.download_status.ticker_ohlc_last_cleanup = init_date
-
             self.db.session.add(self.download_status)
-            self.db.session.commit()
+        else:
+            self.download_status.ticker_list_download_in_progress = False
+            self.download_status.ticker_list_cleanup_in_progress = False
+            self.download_status.ticker_ohlc_download_in_progress = False
+            self.download_status.ticker_ohlc_cleanup_in_progress = False
+
+        self.db.session.commit()
 
     async def run(self):
-        aiocron.crontab("* * * * *", func=self.get_ticker_info_periodic, start=True)
+        aiocron.crontab("* * * * *", func=self.get_ticker_list_periodic, start=True)
         aiocron.crontab("* * * * *", func=self.clean_tickers_periodic, start=True)
         aiocron.crontab("* * * * *", func=self.get_ticker_data_periodic, start=True)
         aiocron.crontab("* * * * *", func=self.cleanup_folders_periodic, start=True)
@@ -68,7 +73,7 @@ class Downloader:
         while True:
             await asyncio.sleep(1)
 
-    async def get_ticker_info_periodic(self):
+    async def get_ticker_list_periodic(self):
         """
         once every 2 hours get new ticker list
         """
@@ -96,7 +101,6 @@ class Downloader:
                 )
             except Exception as e:
                 logging.exception("Exception: %s", e)
-                return
 
     async def clean_tickers_periodic(self):
         """
@@ -132,12 +136,15 @@ class Downloader:
                 )
             except Exception as e:
                 logging.exception("Exception: %s", e)
-                return
 
     async def get_ticker_data_periodic(self):
         """
         once every minute download new ticker
         """
+        logging.info(
+            "ohlc download in progress: %s"
+            % (self.download_status.ticker_ohlc_download_in_progress)
+        )
         if (
             not self.download_status.ticker_ohlc_download_in_progress
             and (
@@ -160,25 +167,32 @@ class Downloader:
                 if tickers:
                     ticker = random.choice(tickers)
 
+                    logging.info(
+                        "downloading data for ticker: %s" % (ticker.ticker_name)
+                    )
+
                     downloaded = get_ticker_info(self.base_path, ticker)
                     if downloaded:
                         get_ticker_ohlc(self.base_path, ticker)
                         ticker.date_added = datetime.now()
                         ticker.downloaded = True
                         self.db.session.merge(ticker)
+                        logging.info(
+                            "finished downloading ticker: %s data at: %s, duration: %s sec"
+                            % (
+                                ticker.ticker_name,
+                                datetime.now(),
+                                (datetime.now() - start_time).seconds,
+                            )
+                        )
                     else:
                         self.db.session.delete(ticker)
 
                 self.download_status.ticker_ohlc_download_in_progress = False
                 self.download_status.ticker_ohlc_last_download = datetime.now()
                 self.db.session.commit()
-                logging.info(
-                    "finished downloading ticker list at: %s, duration: %s sec"
-                    % (datetime.now(), (datetime.now() - start_time).seconds)
-                )
             except Exception as e:
                 logging.exception("Exception: %s", e)
-                return
 
     async def cleanup_folders_periodic(self):
         """
@@ -208,7 +222,6 @@ class Downloader:
                 )
             except Exception as e:
                 logging.exception("Exception: %s", e)
-                return
 
 
 d = Downloader()

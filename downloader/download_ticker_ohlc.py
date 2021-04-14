@@ -6,7 +6,6 @@ import shutil
 from datetime import datetime
 from io import BytesIO
 from os import path
-from urllib.parse import urlencode, quote_plus
 
 import backoff
 import numpy as np
