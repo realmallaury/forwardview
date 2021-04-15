@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import random
+import sys
 from datetime import datetime
 from os import environ
 from os import path
@@ -11,6 +12,7 @@ from dateutil.relativedelta import relativedelta
 from dotenv import dotenv_values
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from pymysql import OperationalError
 
 from app.db.models import DownloadStatus, Ticker
 from download_ticker_list import get_ticker_list, cleanup_tickers
@@ -96,12 +98,18 @@ class Downloader:
                     "finished downloading ticker list at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
+                self.download_status.ticker_list_download_in_progress = False
+                self.download_status.ticker_list_last_download = datetime.now()
+                self.db.session.commit()
+
+            except OperationalError as e:
+                sys.exit("exception: %s, exiting process" % e)
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-            self.download_status.ticker_list_download_in_progress = False
-            self.download_status.ticker_list_last_download = datetime.now()
-            self.db.session.commit()
+                self.download_status.ticker_list_download_in_progress = False
+                self.download_status.ticker_list_last_download = datetime.now()
+                self.db.session.commit()
 
     async def clean_tickers_periodic(self):
         """
@@ -132,12 +140,18 @@ class Downloader:
                     "finished cleaning up ticker list at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
+                self.download_status.ticker_list_cleanup_in_progress = False
+                self.download_status.ticker_list_last_cleanup = datetime.now()
+                self.db.session.commit()
+
+            except OperationalError as e:
+                sys.exit("exception: %s, exiting process" % e)
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-            self.download_status.ticker_list_cleanup_in_progress = False
-            self.download_status.ticker_list_last_cleanup = datetime.now()
-            self.db.session.commit()
+                self.download_status.ticker_list_cleanup_in_progress = False
+                self.download_status.ticker_list_last_cleanup = datetime.now()
+                self.db.session.commit()
 
     async def get_ticker_data_periodic(self):
         """
@@ -155,20 +169,21 @@ class Downloader:
             > 60
         ):
             # if there is error dont update ticker_list_last_download and try again
+            try:
+                start_time = datetime.now()
+                self.download_status.ticker_ohlc_download_in_progress = True
+                self.db.session.commit()
 
-            start_time = datetime.now()
-            self.download_status.ticker_ohlc_download_in_progress = True
-            self.db.session.commit()
+                tickers = (
+                    self.db.session.query(Ticker)
+                    .filter(Ticker.downloaded == False)
+                    .all()
+                )
 
-            tickers = (
-                self.db.session.query(Ticker).filter(Ticker.downloaded == False).all()
-            )
+                if tickers:
+                    ticker = random.choice(tickers)
 
-            if tickers:
-                ticker = random.choice(tickers)
-
-                logging.info("downloading data for ticker: %s" % ticker.ticker_name)
-                try:
+                    logging.info("downloading data for ticker: %s" % ticker.ticker_name)
                     downloaded = get_ticker_info(self.base_path, ticker)
                     if downloaded:
                         get_ticker_ohlc(self.base_path, ticker)
@@ -186,14 +201,18 @@ class Downloader:
                     else:
                         self.db.session.delete(ticker)
 
-                except FileExistsError:
-                    self.db.session.delete(ticker)
-                except Exception as e:
-                    logging.exception("Exception: %s", e)
+                self.download_status.ticker_ohlc_download_in_progress = False
+                self.download_status.ticker_ohlc_last_download = datetime.now()
+                self.db.session.commit()
 
-            self.download_status.ticker_ohlc_download_in_progress = False
-            self.download_status.ticker_ohlc_last_download = datetime.now()
-            self.db.session.commit()
+            except OperationalError as e:
+                sys.exit("exception: %s, exiting process" % e)
+            except Exception as e:
+                logging.exception("Exception: %s", e)
+
+                self.download_status.ticker_ohlc_download_in_progress = False
+                self.download_status.ticker_ohlc_last_download = datetime.now()
+                self.db.session.commit()
 
     async def cleanup_folders_periodic(self):
         """
@@ -218,12 +237,18 @@ class Downloader:
                     "finished cleaning up downloaded tickers at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
+                self.download_status.ticker_ohlc_cleanup_in_progress = False
+                self.download_status.ticker_ohlc_last_cleanup = datetime.now()
+                self.db.session.commit()
+
+            except OperationalError as e:
+                sys.exit("exception: %s, exiting process" % e)
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-            self.download_status.ticker_ohlc_cleanup_in_progress = False
-            self.download_status.ticker_ohlc_last_cleanup = datetime.now()
-            self.db.session.commit()
+                self.download_status.ticker_ohlc_cleanup_in_progress = False
+                self.download_status.ticker_ohlc_last_cleanup = datetime.now()
+                self.db.session.commit()
 
 
 d = Downloader()
