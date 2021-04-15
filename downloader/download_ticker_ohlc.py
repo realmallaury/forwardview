@@ -56,9 +56,9 @@ def get_ticker_info(base_path, ticker):
         "cashFlow": "CASH_FLOW",
     }
     for key, value in financials.items():
-        data_url = (
-            "https://www.alphavantage.co/query?function=%s&symbol=%s&apikey=%s"
-            % (value, ticker.ticker_name, alphavantage_api_key())
+        data_url = "https://www.alphavantage.co/query?function=%s&symbol=%s&apikey=" % (
+            value,
+            ticker.ticker_name,
         )
 
         resp = get_alphavantage_data(data_url)
@@ -85,8 +85,8 @@ def get_ticker_ohlc(base_path, ticker):
     dir_path = path.join(base_path, ticker.date_added.strftime("%d-%m-%Y"))
 
     data_url = (
-        "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&outputsize=full&datatype=csv&apikey=%s"
-        % (ticker.ticker_name, alphavantage_api_key())
+        "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=%s&outputsize=full&datatype=csv&apikey="
+        % (ticker.ticker_name)
     )
     resp = get_alphavantage_data(data_url)
     daily_df = pd.read_csv(BytesIO(resp.content), index_col=0)
@@ -124,12 +124,11 @@ def get_ticker_ohlc(base_path, ticker):
         data_urls = []
         for i, slice in enumerate(time_slice):
             data_urls.append(
-                "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=%s&interval=%s&slice=%s&apikey=%s"
+                "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY_EXTENDED&symbol=%s&interval=%s&slice=%s&apikey="
                 % (
                     ticker.ticker_name,
                     interval,
                     slice,
-                    alphavantage_api_key(),
                 )
             )
         for data_url in data_urls:
@@ -184,7 +183,7 @@ def alphavantage_api_key():
     interval=70,
 )
 def get_alphavantage_data(data_url):
-    return requests.get(data_url)
+    return requests.get(data_url + alphavantage_api_key())
 
 
 def adjust_ohlc_for_dividends_and_split(df, columns):
