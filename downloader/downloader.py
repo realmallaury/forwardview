@@ -2,7 +2,6 @@ import asyncio
 import logging
 import os
 import random
-import sys
 from datetime import datetime
 from os import environ
 from os import path
@@ -12,7 +11,6 @@ from dateutil.relativedelta import relativedelta
 from dotenv import dotenv_values
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from pymysql import OperationalError
 
 from app.db.models import DownloadStatus, Ticker
 from download_ticker_list import get_ticker_list, cleanup_tickers
@@ -73,7 +71,7 @@ class Downloader:
         aiocron.crontab("* * * * *", func=self.cleanup_folders_periodic, start=True)
 
         while True:
-            await asyncio.sleep(1)
+            await asyncio.sleep(10)
 
     async def get_ticker_list_periodic(self):
         """
@@ -94,12 +92,15 @@ class Downloader:
                 get_ticker_list(self.db)
 
                 logging.info(
-                    "finished downloading ticker list at: %s, duration: %s sec"
-                    % (datetime.now(), (datetime.now() - start_time).seconds)
+                    "finished downloading ticker list, duration: %s sec"
+                    % (datetime.now() - start_time).seconds
                 )
 
             except Exception as e:
                 logging.exception("Exception: %s", e)
+                self.download_status.ticker_list_download_in_progress = False
+                self.db.session.commit()
+                return
 
             self.download_status.ticker_list_download_in_progress = False
             self.download_status.ticker_list_last_download = datetime.now()
@@ -121,17 +122,17 @@ class Downloader:
                 self.download_status.ticker_list_cleanup_in_progress = True
                 self.db.session.commit()
 
+                # clean tickers that are older than 3 days and are not downloaded
                 query_date = (datetime.now() - relativedelta(days=3)).date()
-                # tickers that are older than 3 days and are not downloaded
                 cleanup_tickers(self.db, query_date, False)
 
+                # clean tickers that are older than 5 days and are downloaded
                 query_date = (datetime.now() - relativedelta(days=5)).date()
-                # tickers that are older than 7 days and are downloaded
                 cleanup_tickers(self.db, query_date, True)
 
                 logging.info(
-                    "finished cleaning up ticker list at: %s, duration: %s sec"
-                    % (datetime.now(), (datetime.now() - start_time).seconds)
+                    "finished cleaning up ticker list, duration: %s sec"
+                    % (datetime.now() - start_time).seconds
                 )
                 self.download_status.ticker_list_cleanup_in_progress = False
                 self.download_status.ticker_list_last_cleanup = datetime.now()
@@ -159,7 +160,6 @@ class Downloader:
             ).total_seconds()
             > 60
         ):
-            # if there is error dont update ticker_list_last_download and try again
             try:
                 start_time = datetime.now()
                 self.download_status.ticker_ohlc_download_in_progress = True
@@ -182,10 +182,9 @@ class Downloader:
                         ticker.downloaded = True
                         self.db.session.merge(ticker)
                         logging.info(
-                            "finished downloading ticker: %s data at: %s, duration: %s sec"
+                            "finished downloading ticker: %s, duration: %s sec"
                             % (
                                 ticker.ticker_name,
-                                datetime.now(),
                                 (datetime.now() - start_time).seconds,
                             )
                         )
@@ -218,8 +217,8 @@ class Downloader:
                 cleanup_folders(self.base_path)
 
                 logging.info(
-                    "finished cleaning up downloaded tickers at: %s, duration: %s sec"
-                    % (datetime.now(), (datetime.now() - start_time).seconds)
+                    "finished cleaning up downloaded tickers, duration: %s sec"
+                    % (datetime.now() - start_time).seconds
                 )
 
             except Exception as e:

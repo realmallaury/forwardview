@@ -29,6 +29,12 @@ up: # run docker images locally
 down:
 	docker-compose -f provision/docker-compose.yml stop && docker-compose -f provision/docker-compose.yml rm -f && docker system prune -f
 
+up-downloader: # run docker images locally
+	docker-compose -f provision/docker-compose-downloader.yml up -d
+
+down-downloader:
+	docker-compose -f provision/docker-compose-downloader.yml stop && docker-compose -f provision/docker-compose-downloader.yml rm -f && docker system prune -f
+
 update: env
 	venv/bin/python3 -m pip install -U pip poetry
 	poetry update

@@ -4,7 +4,7 @@ services:
   forwardview-1:
     container_name: forwardview-1
     image: forwardview:0.0.1
-    restart: always
+    restart: unless-stopped
     ports:
       - 5001:5001
     environment:
@@ -23,7 +23,7 @@ services:
   forwardview-2:
     container_name: forwardview-2
     image: forwardview:0.0.1
-    restart: always
+    restart: unless-stopped
     ports:
       - 5002:5002
     environment:
@@ -36,21 +36,6 @@ services:
     volumes:
       - /home/stipe/Documents/forwardview-data/data:/forwardview-data
     command: waitress-serve --port=5002 --call app:create_app
-    depends_on:
-      mysql:
-        condition: service_healthy
-  downloader:
-    container_name: downloader
-    image: downloader:0.0.1
-    restart: always
-    environment:
-      - FLASK_ENV=production
-      - SECRET_KEY=should_be_really_random
-      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
-      - DATA_DIR=/forwardview-data
-    volumes:
-      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
-    command: python3 downloader/downloader.py
     depends_on:
       mysql:
         condition: service_healthy

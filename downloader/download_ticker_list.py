@@ -88,12 +88,9 @@ def signals():
     max_tries=5,
 )
 def get_overview(signal):
-    try:
-        overview = Overview()
-        overview.set_filter(signal=signal)
-        return overview.ScreenerView(verbose=0)
-    except Exception as e:
-        return e
+    overview = Overview()
+    overview.set_filter(signal=signal)
+    return overview.ScreenerView(verbose=0)
 
 
 @backoff.on_predicate(
@@ -103,8 +100,5 @@ def get_overview(signal):
     max_tries=5,
 )
 def get_stock_fundamentals(ticker_name):
-    try:
-        stock = finvizfinance(ticker_name)
-        return stock.TickerFundament()
-    except Exception as e:
-        return e
+    stock = finvizfinance(ticker_name)
+    return stock.TickerFundament()
