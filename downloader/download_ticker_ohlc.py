@@ -181,8 +181,7 @@ def alphavantage_api_key():
 @backoff.on_predicate(
     backoff.constant,
     lambda req: str(req.content).find("Thank you for using Alpha Vantage!") != -1,
-    interval=10,
-    max_tries=5,
+    interval=20,
 )
 def get_alphavantage_data(data_url):
     return requests.get(data_url)
