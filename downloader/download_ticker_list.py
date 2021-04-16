@@ -85,6 +85,7 @@ def signals():
     backoff.constant,
     lambda result: type(result) is Exception,
     interval=10,
+    max_tries=5,
 )
 def get_overview(signal):
     try:
@@ -99,6 +100,7 @@ def get_overview(signal):
     backoff.constant,
     lambda result: type(result) is Exception,
     interval=10,
+    max_tries=5,
 )
 def get_stock_fundamentals(ticker_name):
     try:

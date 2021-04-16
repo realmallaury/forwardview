@@ -86,7 +86,6 @@ class Downloader:
             ).total_seconds()
             > 2 * 60 * 60
         ):
-            # if there is error dont update ticker_list_last_download and try again
             try:
                 start_time = datetime.now()
                 self.download_status.ticker_list_download_in_progress = True
@@ -98,18 +97,13 @@ class Downloader:
                     "finished downloading ticker list at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
-                self.download_status.ticker_list_download_in_progress = False
-                self.download_status.ticker_list_last_download = datetime.now()
-                self.db.session.commit()
 
-            except OperationalError as e:
-                sys.exit("exception: %s, exiting process" % e)
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-                self.download_status.ticker_list_download_in_progress = False
-                self.download_status.ticker_list_last_download = datetime.now()
-                self.db.session.commit()
+            self.download_status.ticker_list_download_in_progress = False
+            self.download_status.ticker_list_last_download = datetime.now()
+            self.db.session.commit()
 
     async def clean_tickers_periodic(self):
         """
@@ -122,7 +116,6 @@ class Downloader:
             ).total_seconds()
             > 24 * 60 * 60
         ):
-            # if there is error dont update ticker_list_last_update and try again
             try:
                 start_time = datetime.now()
                 self.download_status.ticker_list_cleanup_in_progress = True
@@ -144,14 +137,12 @@ class Downloader:
                 self.download_status.ticker_list_last_cleanup = datetime.now()
                 self.db.session.commit()
 
-            except OperationalError as e:
-                sys.exit("exception: %s, exiting process" % e)
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-                self.download_status.ticker_list_cleanup_in_progress = False
-                self.download_status.ticker_list_last_cleanup = datetime.now()
-                self.db.session.commit()
+            self.download_status.ticker_list_cleanup_in_progress = False
+            self.download_status.ticker_list_last_cleanup = datetime.now()
+            self.db.session.commit()
 
     async def get_ticker_data_periodic(self):
         """
@@ -201,18 +192,12 @@ class Downloader:
                     else:
                         self.db.session.delete(ticker)
 
-                self.download_status.ticker_ohlc_download_in_progress = False
-                self.download_status.ticker_ohlc_last_download = datetime.now()
-                self.db.session.commit()
-
-            except OperationalError as e:
-                sys.exit("exception: %s, exiting process" % e)
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-                self.download_status.ticker_ohlc_download_in_progress = False
-                self.download_status.ticker_ohlc_last_download = datetime.now()
-                self.db.session.commit()
+            self.download_status.ticker_ohlc_download_in_progress = False
+            self.download_status.ticker_ohlc_last_download = datetime.now()
+            self.db.session.commit()
 
     async def cleanup_folders_periodic(self):
         """
@@ -225,7 +210,6 @@ class Downloader:
             ).total_seconds()
             > 24 * 60 * 60
         ):
-            # if there is error dont update ticker_list_last_download and try again
             try:
                 start_time = datetime.now()
                 self.download_status.ticker_ohlc_cleanup_in_progress = True
@@ -237,18 +221,13 @@ class Downloader:
                     "finished cleaning up downloaded tickers at: %s, duration: %s sec"
                     % (datetime.now(), (datetime.now() - start_time).seconds)
                 )
-                self.download_status.ticker_ohlc_cleanup_in_progress = False
-                self.download_status.ticker_ohlc_last_cleanup = datetime.now()
-                self.db.session.commit()
 
-            except OperationalError as e:
-                sys.exit("exception: %s, exiting process" % e)
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-                self.download_status.ticker_ohlc_cleanup_in_progress = False
-                self.download_status.ticker_ohlc_last_cleanup = datetime.now()
-                self.db.session.commit()
+            self.download_status.ticker_ohlc_cleanup_in_progress = False
+            self.download_status.ticker_ohlc_last_cleanup = datetime.now()
+            self.db.session.commit()
 
 
 d = Downloader()
