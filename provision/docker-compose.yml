@@ -15,7 +15,7 @@ services:
       - CACHE_REDIS_URL=redis://redis:6379/0
       - CACHE_DEFAULT_TIMEOUT=300
     volumes:
-      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
+      - /home/forwardview-data/data:/forwardview-data
     command: waitress-serve --port=5001 --call app:create_app
     depends_on:
       mysql:
@@ -34,7 +34,7 @@ services:
       - CACHE_REDIS_URL=redis://redis:6379/0
       - CACHE_DEFAULT_TIMEOUT=300
     volumes:
-      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
+      - /home/forwardview-data/data:/forwardview-data
     command: waitress-serve --port=5002 --call app:create_app
     depends_on:
       mysql:
@@ -55,7 +55,7 @@ services:
       retries: 10
     volumes:
       - ./:/docker-entrypoint-initdb.d
-      - /home/stipe/Documents/forwardview-data/mysql:/var/lib/mysql
+      - /home/forwardview-data/mysql:/var/lib/mysql
   redis:
     container_name: redis
     image: "redis:alpine"
@@ -63,7 +63,7 @@ services:
     ports:
       - 6379:6379
     volumes:
-      - /home/stipe/Documents/forwardview-data/redis:/data
+      - /home/forwardview-data/redis:/data
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       timeout: 20s

@@ -32,6 +32,6 @@ services:
       - DATA_DIR=/forwardview-data
     restart: unless-stopped
     volumes:
-      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
+      - /home/forwardview-data/data:/forwardview-data
     command: python3 downloader/downloader.py
     network_mode: service:vpn
