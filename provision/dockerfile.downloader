@@ -1,5 +1,7 @@
 FROM python:3.8-slim-buster
 
+RUN apt-get update && apt-get install -y cron
+
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
@@ -7,3 +9,10 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY ./downloader ./downloader
 COPY ./app ./downloader/app
+
+WORKDIR /
+
+COPY ./provision/entrypoint.sh .
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT /entrypoint.sh

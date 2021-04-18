@@ -8,13 +8,13 @@ services:
     devices:
       - /dev/net/tun
     environment:
-      - USER=
-      - PASS=
+      - USER=cirko502@gmail.com
+      - PASS=OviGrafovi5u5kupi
       - COUNTRY=United Kingdom;Norway;Spain;Switzerland
       - CATEGORY=Dedicated IP
       - RANDOM_TOP=20
       - RECREATE_VPN_CRON=*/30 * * * *
-      - NETWORK=192.168.0.0/24;192.168.122.0/24
+      - NETWORK=192.168.0.0/24
       - OPENVPN_OPTS=--mute-replay-warnings
       - PROTOCOL=openvpn_tcp
       - CHECK_CONNECTION_URL=https://finviz.com/screener.ashx;https://www.alphavantage.co
@@ -26,12 +26,9 @@ services:
     container_name: downloader
     image: downloader:0.0.1
     environment:
-      - FLASK_ENV=production
-      - SECRET_KEY=should_be_really_random
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
       - DATA_DIR=/forwardview-data
     restart: unless-stopped
     volumes:
-      - /home/forwardview-data/data:/forwardview-data
-    command: python3 downloader/downloader.py
+      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
     network_mode: service:vpn

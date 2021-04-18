@@ -14,7 +14,7 @@ services:
       - CATEGORY=Dedicated IP
       - RANDOM_TOP=20
       - RECREATE_VPN_CRON=*/30 * * * *
-      - NETWORK=165.227.224.0/20
+      - NETWORK=10.16.0.0/16;10.106.0.0/20
       - OPENVPN_OPTS=--mute-replay-warnings
       - PROTOCOL=openvpn_tcp
       - CHECK_CONNECTION_URL=https://finviz.com/screener.ashx;https://www.alphavantage.co

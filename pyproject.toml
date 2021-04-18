@@ -24,7 +24,6 @@ pymysql = "*"
 waitress = "*"
 redis = "*"
 cryptography = "*"
-aiocron = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

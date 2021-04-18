@@ -1,0 +1,28 @@
+.PHONY: requirements
+requirements: venv
+	$(VENV)/pip3 install -r requirements.txt
+
+.PHONY: update
+update: venv
+	$(VENV)/pip3 install -U pip poetry
+	$(VENV)/poetry update
+	$(VENV)/poetry export -f requirements.txt --output requirements.txt --without-hashes
+	$(VENV)/pip3 install -r requirements.txt
+
+.PHONY: format
+format: venv
+	$(VENV)/isort ./
+	$(VENV)/black ./
+
+.PHONY: test
+test: venv
+	$(VENV)/python -m unittest
+
+.PHONY: clean
+clean: venv
+	find . -name '*.pyc' -delete
+	find . -name '__pycache__' -delete
+	find . -name 'poetry.lock' -delete
+	find . -name 'Pipefile.lock' -delete
+
+include Makefile.venv
