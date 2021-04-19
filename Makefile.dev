@@ -19,7 +19,7 @@ test: venv
 	$(VENV)/python -m unittest
 
 .PHONY: clean
-clean: venv
+clean: clean-venv
 	find . -name '*.pyc' -delete
 	find . -name '__pycache__' -delete
 	find . -name 'poetry.lock' -delete
