@@ -21,7 +21,7 @@ def get_ticker_info(base_path, ticker):
     downloaded = False
     info = {"news": "", "overview": ""}
 
-    ticker_info = finvizfinance(ticker.ticker_name)
+    ticker_info = get_finvizfinance(ticker.ticker_name)
     try:
         ratings_df = ticker_info.TickerOuterRatings()
     except:
@@ -180,11 +180,21 @@ def alphavantage_api_key():
 
 @backoff.on_predicate(
     backoff.constant,
+    lambda result: type(result) is Exception,
+    interval=10,
+    max_tries=5,
+)
+def get_finvizfinance(ticker_name):
+    return finvizfinance(ticker_name)
+
+
+@backoff.on_predicate(
+    backoff.constant,
     lambda req: str(req.content).find("Thank you for using Alpha Vantage!") != -1,
     interval=20,
 )
 def get_alphavantage_data(data_url):
-    return requests.get(data_url)
+    return requests.get(data_url, timeout=(2, 5))
 
 
 def adjust_ohlc_for_dividends_and_split(df, columns):
