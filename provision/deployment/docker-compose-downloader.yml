@@ -26,9 +26,7 @@ services:
     container_name: downloader
     image: downloader:0.0.1
     environment:
-      - FLASK_ENV=production
-      - SECRET_KEY=should_be_really_random
-      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
+      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@138.68.128.219:3308/forwardview
       - DATA_DIR=/forwardview-data
     restart: unless-stopped
     volumes:
