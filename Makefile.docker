@@ -30,14 +30,6 @@ up:
 down:
 	docker-compose -f $(LOCAL_ENV_PATH)/docker-compose.yml stop && docker-compose -f $(LOCAL_ENV_PATH)/docker-compose.yml rm -f && docker system prune -f
 
-.PHONY: up-downloader
-up-downloader: # run docker images locally
-	docker-compose -f $(LOCAL_ENV_PATH)/docker-compose-downloader.yml up -d
-
-.PHONY: down-downloader
-down-downloader:
-	docker-compose -f $(LOCAL_ENV_PATH)/docker-compose-downloader.yml stop && docker-compose -f $(LOCAL_ENV_PATH)/docker-compose-downloader.yml rm -f && docker system prune -f
-
 ## DEPLOYMENT
 
 .PHONY: up-deployment
