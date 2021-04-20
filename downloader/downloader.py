@@ -55,13 +55,8 @@ class Downloader:
                     ticker_ohlc_last_cleanup=init_date,
                 )
                 sess.add(download_status)
-            else:
-                download_status.ticker_list_download_in_progress = False
-                download_status.ticker_list_cleanup_in_progress = False
-                download_status.ticker_ohlc_download_in_progress = False
-                download_status.ticker_ohlc_cleanup_in_progress = False
+                sess.commit()
 
-            sess.commit()
             sess.close()
 
         except Exception as e:
@@ -120,16 +115,10 @@ class Downloader:
             sys.exit()
 
         if (
-            not download_status.ticker_list_cleanup_in_progress
-            and (
-                datetime.now() - download_status.ticker_list_last_cleanup
-            ).total_seconds()
-            > 24 * 60 * 60
-        ):
+            datetime.now() - download_status.ticker_list_last_cleanup
+        ).total_seconds() > 24 * 60 * 60:
             try:
                 start_time = datetime.now()
-                download_status.ticker_list_download_in_progress = True
-                sess.commit()
 
                 # clean tickers that are older than 3 days and are not downloaded
                 query_date = (datetime.now() - relativedelta(days=3)).date()
@@ -148,7 +137,6 @@ class Downloader:
                 logging.exception("Exception: %s", e)
 
             download_status.ticker_list_last_cleanup = datetime.now()
-            download_status.ticker_list_cleanup_in_progress = False
             sess.commit()
 
         sess.close()
@@ -159,23 +147,11 @@ class Downloader:
         if not download_status:
             sys.exit()
 
-        logging.info(
-            "ohlc download in progress: %s"
-            % (download_status.ticker_ohlc_download_in_progress)
-        )
-
         if (
-            not download_status.ticker_ohlc_download_in_progress
-            and (
-                datetime.now() - download_status.ticker_ohlc_last_download
-            ).total_seconds()
-            > 60
-        ):
+            datetime.now() - download_status.ticker_ohlc_last_download
+        ).total_seconds() > 60:
             try:
                 start_time = datetime.now()
-                download_status.ticker_ohlc_download_in_progress = True
-                sess.commit()
-
                 tickers = sess.query(Ticker).filter(Ticker.downloaded == False).all()
 
                 if tickers:
@@ -200,7 +176,6 @@ class Downloader:
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-            download_status.ticker_ohlc_download_in_progress = False
             download_status.ticker_ohlc_last_download = datetime.now()
             sess.commit()
 
@@ -213,16 +188,10 @@ class Downloader:
             sys.exit()
 
         if (
-            download_status.ticker_ohlc_cleanup_in_progress
-            and (
-                datetime.now() - download_status.ticker_ohlc_last_cleanup
-            ).total_seconds()
-            > 24 * 60 * 60
-        ):
+            datetime.now() - download_status.ticker_ohlc_last_cleanup
+        ).total_seconds() > 24 * 60 * 60:
             try:
                 start_time = datetime.now()
-                download_status.ticker_ohlc_cleanup_in_progress = True
-                sess.commit()
 
                 cleanup_folders(self.base_path)
 
@@ -234,7 +203,6 @@ class Downloader:
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-            download_status.ticker_ohlc_cleanup_in_progress = False
             download_status.ticker_ohlc_last_cleanup = datetime.now()
             sess.commit()
 
