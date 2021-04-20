@@ -181,7 +181,7 @@ def alphavantage_api_key():
 @backoff.on_predicate(
     backoff.constant,
     lambda result: type(result) is Exception,
-    interval=10,
+    interval=5,
     max_tries=5,
 )
 def get_finvizfinance(ticker_name):
