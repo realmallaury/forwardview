@@ -108,8 +108,9 @@ class Downloader:
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-        download_status.ticker_list_download_in_progress = False
-        sess.commit()
+            download_status.ticker_list_download_in_progress = False
+            sess.commit()
+
         sess.close()
 
     def clean_ticker_list(self):
@@ -146,9 +147,10 @@ class Downloader:
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-        download_status.ticker_list_last_cleanup = datetime.now()
-        download_status.ticker_list_cleanup_in_progress = False
-        sess.commit()
+            download_status.ticker_list_last_cleanup = datetime.now()
+            download_status.ticker_list_cleanup_in_progress = False
+            sess.commit()
+
         sess.close()
 
     def get_ticker_data(self):
@@ -198,9 +200,10 @@ class Downloader:
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-        download_status.ticker_ohlc_download_in_progress = False
-        download_status.ticker_ohlc_last_download = datetime.now()
-        sess.commit()
+            download_status.ticker_ohlc_download_in_progress = False
+            download_status.ticker_ohlc_last_download = datetime.now()
+            sess.commit()
+
         sess.close()
 
     def clean_ticker_data(self):
@@ -231,9 +234,10 @@ class Downloader:
             except Exception as e:
                 logging.exception("Exception: %s", e)
 
-        download_status.ticker_ohlc_cleanup_in_progress = False
-        download_status.ticker_ohlc_last_cleanup = datetime.now()
-        sess.commit()
+            download_status.ticker_ohlc_cleanup_in_progress = False
+            download_status.ticker_ohlc_last_cleanup = datetime.now()
+            sess.commit()
+
         sess.close()
 
 
