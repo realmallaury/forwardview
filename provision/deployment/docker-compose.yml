@@ -1,4 +1,4 @@
-version: "2"
+version: "3.5"
 
 services:
   forwardview-1:
@@ -43,6 +43,8 @@ services:
         condition: service_healthy
     networks:
       - fw
+
 networks:
   fw:
-    external: true
+    external:
+      name: fw-network

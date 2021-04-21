@@ -1,4 +1,4 @@
-version: "2"
+version: "3.5"
 
 services:
   mysql:
@@ -45,6 +45,7 @@ services:
         - ./:/etc/nginx
     networks:
       - fw
+
 networks:
-  fw:
-    driver: bridge
+  proxynet:
+    name: fw-network
