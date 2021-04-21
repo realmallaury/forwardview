@@ -47,5 +47,5 @@ services:
       - fw
 
 networks:
-  proxynet:
+  fw:
     name: fw-network
