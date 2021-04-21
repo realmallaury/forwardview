@@ -40,12 +40,12 @@ up-deployment:
 down-deployment:
 	docker-compose -f $(DEPLOYMENT_ENV_PATH)/docker-compose.yml stop && docker-compose -f $(DEPLOYMENT_ENV_PATH)/docker-compose.yml rm -f && docker system prune -f
 
-.PHONY: up-provision
-up-deployment:
+.PHONY: up-provision-deployment
+up-provision-deployment:
 	docker-compose -f $(DEPLOYMENT_ENV_PATH)/docker-compose-provision.yml up -d
 
-.PHONY: down-provision
-down-deployment:
+.PHONY: down-provision-deployment
+down-provision-deployment:
 	docker-compose -f $(DEPLOYMENT_ENV_PATH)/docker-compose-provision.yml stop && docker-compose -f $(DEPLOYMENT_ENV_PATH)/docker-compose-provision.yml rm -f && docker system prune -f
 
 .PHONY: up-downloader-deployment
