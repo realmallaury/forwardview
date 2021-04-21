@@ -13,7 +13,7 @@ services:
       - COUNTRY=United Kingdom;Norway;Spain;Switzerland
       - CATEGORY=Dedicated IP
       - RANDOM_TOP=20
-      - RECREATE_VPN_CRON=*/15 * * * *
+      - RECREATE_VPN_CRON=0 * * * *
       - NETWORK=10.16.0.0/16;10.106.0.0/20
       - OPENVPN_OPTS=--mute-replay-warnings
       - PROTOCOL=openvpn_tcp

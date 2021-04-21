@@ -112,6 +112,10 @@ def get_ticker_ohlc(base_path, ticker):
 
     # Store ticker data
     ticker_ohlc_path = path.join(dir_path, ticker.ticker_name + "_1d")
+    # remove file if exists
+    if os.path.exists(ticker_ohlc_path):
+        os.remove(ticker_ohlc_path)
+
     daily_df.to_feather(ticker_ohlc_path)
 
     for interval in ["15min", "60min"]:
@@ -142,8 +146,12 @@ def get_ticker_ohlc(base_path, ticker):
         # reset time index to column before save
         intraday_df.reset_index(inplace=True)
 
-        # Store ticker data
+        # store ticker data
         ticker_ohlc_path = path.join(dir_path, ticker.ticker_name + "_" + interval)
+        # remove file if exists
+        if os.path.exists(ticker_ohlc_path):
+            os.remove(ticker_ohlc_path)
+
         intraday_df.to_feather(ticker_ohlc_path)
 
 
@@ -161,7 +169,7 @@ def save_ticker_info(base_path, ticker, info):
         os.mkdir(dir_path)
 
     ticker_info_path = path.join(dir_path, ticker.ticker_name + "_info")
-    with open(ticker_info_path, "xb") as f:
+    with open(ticker_info_path, "wb") as f:
         pickle.dump(info, f)
 
 
