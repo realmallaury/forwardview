@@ -20,6 +20,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      - fw
   forwardview-2:
     container_name: forwardview-2
     image: forwardview:0.0.1
@@ -39,3 +41,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+    networks:
+      - fw
+networks:
+  fw:
+    external: true

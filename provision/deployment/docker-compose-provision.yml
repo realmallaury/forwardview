@@ -18,6 +18,8 @@ services:
     volumes:
       - ./:/docker-entrypoint-initdb.d
       - /home/forwardview-data/mysql:/var/lib/mysql
+    networks:
+      - fw
   redis:
     container_name: redis
     image: "redis:alpine"
@@ -30,6 +32,8 @@ services:
       test: [ "CMD", "redis-cli", "ping" ]
       timeout: 20s
       retries: 10
+    networks:
+      - fw
   nginx:
     container_name: nginx
     image: nginx:alpine
@@ -39,3 +43,8 @@ services:
       - 443:443
     volumes:
         - ./:/etc/nginx
+    networks:
+      - fw
+networks:
+  fw:
+    driver: bridge
