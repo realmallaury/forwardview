@@ -19,7 +19,7 @@ def get_ticker_list(sess):
     # get list of existing ticker
     ids = [id[0] for id in sess.query(Ticker.ticker_name)]
 
-    # add new tickers or update existing ones
+    # add new tickers but dont update existing ones
     for ticker_name in list(ticker_names):
         stock_fundamentals = get_stock_fundamentals(ticker_name)
         if stock_fundamentals.get("Income") != "-":
@@ -30,13 +30,6 @@ def get_ticker_list(sess):
                         date_added=datetime.now(),
                         downloaded=False,
                     )
-                )
-            else:
-                sess.query(Ticker).filter(Ticker.ticker_name == ticker_name).update(
-                    {
-                        Ticker.date_added: datetime.now(),
-                        Ticker.downloaded: False,
-                    }
                 )
 
     sess.commit()

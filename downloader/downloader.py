@@ -84,7 +84,7 @@ class Downloader:
             and (
                 datetime.now() - download_status.ticker_list_last_download
             ).total_seconds()
-            > 2 * 60 * 60
+            > 4 * 60 * 60
         ):
             try:
                 start_time = datetime.now()
@@ -193,7 +193,7 @@ class Downloader:
             try:
                 start_time = datetime.now()
 
-                cleanup_folders(self.base_path)
+                cleanup_folders(self.base_path, 7)
 
                 logging.info(
                     "finished cleaning up downloaded tickers, duration: %s sec"
