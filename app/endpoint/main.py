@@ -18,3 +18,9 @@ def account():
     acc = Accounts(current_user)
     accounts = acc.get_accounts()
     return render_template("account.html", name=current_user.name, accounts=accounts)
+
+
+@main.route("/knowledgebase")
+@login_required
+def knowledgebase():
+    return render_template("knowledgebase.html")
