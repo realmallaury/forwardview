@@ -24,11 +24,9 @@ finvizfinance==0.9.6; python_version >= "3.5"
 flask-assets==2.0
 flask-caching==1.10.1; python_version >= "3.5"
 flask-login==0.5.0
-flask-minify==0.32
 flask-sqlalchemy==2.5.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 flask==1.1.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 greenlet==1.0.0; python_version >= "3" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3"
-htmlmin==0.1.12
 idna==2.10; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 ipykernel==5.5.3; python_version >= "3.6"
 ipython-genutils==0.2.0; python_version >= "3.7"
@@ -37,7 +35,6 @@ ipywidgets==7.6.3
 itsdangerous==1.1.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 jedi==0.18.0; python_version >= "3.7"
 jinja2==2.11.3; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-jsmin==2.2.2
 jsonschema==3.2.0; python_version >= "3.5"
 jupyter-client==6.2.0; python_full_version >= "3.6.1" and python_version >= "3.6"
 jupyter-console==6.4.0; python_version >= "3.6"
@@ -45,7 +42,6 @@ jupyter-core==4.7.1; python_full_version >= "3.6.1" and python_version >= "3.6"
 jupyter==1.0.0
 jupyterlab-pygments==0.1.2; python_version >= "3.6"
 jupyterlab-widgets==1.0.0; python_version >= "3.6"
-lesscpy==0.14.0
 lxml==4.6.3; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.5"
 markupsafe==1.1.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 mistune==0.8.4; python_version >= "3.6"
@@ -62,7 +58,6 @@ pandocfilters==1.4.3; python_version >= "3.6" and python_full_version < "3.0.0" 
 parso==0.8.2; python_version >= "3.7"
 pexpect==4.8.0; sys_platform != "win32" and python_version >= "3.7"
 pickleshare==0.7.5; python_version >= "3.7"
-ply==3.11
 prometheus-client==0.10.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
 prompt-toolkit==3.0.18; python_full_version >= "3.6.1" and python_version >= "3.7"
 ptyprocess==0.7.0; os_name != "nt" and python_version >= "3.7" and sys_platform != "win32"
@@ -78,7 +73,6 @@ python-dotenv==0.17.0
 pytz==2021.1; python_full_version >= "3.7.1" and python_version >= "3.5"
 pywin32==300; sys_platform == "win32" and python_version >= "3.6"
 pywinpty==0.5.7; os_name == "nt" and python_version >= "3.6"
-pyyaml==5.4.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 pyzmq==22.0.3; python_full_version >= "3.6.1" and python_version >= "3.6"
 qtconsole==5.0.3; python_version >= "3.6"
 qtpy==1.9.0; python_version >= "3.6"
@@ -88,7 +82,7 @@ scipy==1.6.1; python_version >= "3.7"
 send2trash==1.5.0; python_version >= "3.6"
 six==1.15.0; python_full_version >= "3.7.1" and python_version >= "3.6" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.6") and (python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.5")
 soupsieve==2.2.1; python_version >= "3.6"
-sqlalchemy==1.4.9; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
+sqlalchemy==1.4.11; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 terminado==0.9.4; python_version >= "3.6"
 testpath==0.4.4; python_version >= "3.6"
 tornado==6.1; python_full_version >= "3.6.1" and python_version >= "3.6"
@@ -101,6 +95,5 @@ webassets==2.0
 webencodings==0.5.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 werkzeug==1.0.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 widgetsnbextension==3.5.1
-xxhash==2.0.2; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 yarl==1.6.3; python_version >= "3.6"
 zope.interface==5.4.0; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.5"

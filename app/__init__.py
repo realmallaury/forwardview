@@ -7,7 +7,6 @@ from flask import Flask
 from flask_assets import Environment
 from flask_caching import Cache
 from flask_login import LoginManager
-from flask_minify import minify
 from pymysql import install_as_MySQLdb
 
 from app.config import Config
@@ -32,9 +31,6 @@ def create_app():
     app.config.from_object(Config)
 
     app.secret_key = secrets.token_urlsafe(64)
-
-    if app.config.get("ENV") == "production":
-        minify(app=app, js=True)
 
     assets = Environment()
     assets.init_app(app)
