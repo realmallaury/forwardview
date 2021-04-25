@@ -135,7 +135,7 @@ body {
   }
 
   .bd-aside {
-    grid-area: 1 / 3;
+    grid-area: 1/3;
     scroll-margin-top: 4rem;
   }
 
