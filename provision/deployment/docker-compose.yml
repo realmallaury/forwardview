@@ -77,3 +77,4 @@ services:
       - 443:443
     volumes:
       - ./:/etc/nginx
+      - /home/forwardview/resources/static:/forwardview
