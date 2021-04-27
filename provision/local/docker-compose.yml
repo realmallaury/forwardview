@@ -1,25 +1,25 @@
 version: "2"
 
 services:
-  forwardview-1:
-    container_name: forwardview-1
-    image: forwardview:0.0.1
-    restart: unless-stopped
-    ports:
-      - 5001:5001
-    environment:
-      - FLASK_ENV=production
-      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
-      - DATA_DIR=/forwardview-data
-      - CACHE_TYPE=RedisCache
-      - CACHE_REDIS_URL=redis://redis:6379/0
-      - CACHE_DEFAULT_TIMEOUT=300
-    volumes:
-      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
-    command: waitress-serve --port=5001 --call app:create_app
-    depends_on:
-      mysql:
-        condition: service_healthy
+#  forwardview-1:
+#    container_name: forwardview-1
+#    image: forwardview:0.0.1
+#    restart: unless-stopped
+#    ports:
+#      - 5001:5001
+#    environment:
+#      - FLASK_ENV=production
+#      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
+#      - DATA_DIR=/forwardview-data
+#      - CACHE_TYPE=RedisCache
+#      - CACHE_REDIS_URL=redis://redis:6379/0
+#      - CACHE_DEFAULT_TIMEOUT=300
+#    volumes:
+#      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
+#    command: waitress-serve --port=5001 --call app:create_app
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
 #  forwardview-2:
 #    container_name: forwardview-2
 #    image: forwardview:0.0.1
@@ -68,13 +68,13 @@ services:
       test: [ "CMD", "redis-cli", "ping" ]
       timeout: 20s
       retries: 10
-  nginx:
-    container_name: nginx
-    image: nginx:alpine
-    restart: unless-stopped
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-        - ./:/etc/nginx
-        - /home/stipe/Documents/forwardview/resources:/forwardview
+#  nginx:
+#    container_name: nginx
+#    image: nginx:alpine
+#    restart: unless-stopped
+#    ports:
+#      - 80:80
+#      - 443:443
+#    volumes:
+#        - ./nginx.conf:/etc/nginx/nginx.conf
+#        - /home/stipe/Documents/forwardview/resources:/forwardview
