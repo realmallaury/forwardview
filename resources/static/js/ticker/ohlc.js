@@ -1,6 +1,8 @@
 function createOhlcChart(tickerOhlc) {
     let ohlcChart = am4core.create("ohlc", am4charts.XYChart);
 
+    ohlcChart.svgContainer.autoResize = false;
+
     ohlcChart.dateFormatter.inputDateFormat = "YYYY-MM-DDTHH:mm:ss.sssZ";
     ohlcChart.dateFormatter.timezoneOffset = 0;
 
@@ -156,13 +158,18 @@ function createOhlcChart(tickerOhlc) {
 
     ohlcChart.data = tickerOhlc;
 
+    showIndicator(ohlcChart);
+    ohlcChart.events.on("ready", function(ev){
+	    hideIndicator();
+    });
+
     return ohlcChart;
 }
 
 function updateOhlcChart(ohlcChart, interval, next) {
     let tabs = ["#pills-tab-15min", "#pills-tab-60min", "#pills-tab-1d"]
     let url = "/ticker.json?interval=" + interval;
-    if (Boolean(next)) {
+    if (next === "true") {
         url = url + "&next=true";
     }
 
@@ -172,6 +179,23 @@ function updateOhlcChart(ohlcChart, interval, next) {
             if (!_.isEqual(ohlcChart.data, response.data)) {
                 ohlcChart.data = response.data;
                 // ohlcChart.validateData();
+
+                if (interval === "15min") {
+                    ohlcChart.xAxes._values[0].baseInterval = {
+                        count: 15,
+                        timeUnit: "minute"
+                    }
+                } else if (interval === "60min") {
+                    ohlcChart.xAxes._values[0].baseInterval = {
+                        count: 60,
+                        timeUnit: "minute"
+                    }
+                } else if (interval === "1d") {
+                    ohlcChart.xAxes._values[0].baseInterval = {
+                        count: 1,
+                        timeUnit: "day"
+                    }
+                }
 
                 _.each(tabs, function (item) {
                     $(item).removeClass("active");
@@ -217,4 +241,32 @@ function exitTrade(ohlcChart, order) {
                 $("#error-submit").show();
             }
         });
+}
+
+let indicator;
+let indicatorInterval;
+
+function showIndicator(ohlcChart) {
+  if (!indicator) {
+    indicator = ohlcChart.tooltipContainer.createChild(am4core.Container);
+    indicator.background.fill = am4core.color("#fff");
+    indicator.width = am4core.percent(100);
+    indicator.height = am4core.percent(100);
+
+    var indicatorLabel = indicator.createChild(am4core.Label);
+    indicatorLabel.text = "Loading ticker data...";
+    indicatorLabel.align = "center";
+    indicatorLabel.valign = "top";
+    indicatorLabel.dy = 50;
+  }
+
+  indicator.hide(0);
+  indicator.show();
+
+  clearInterval(indicatorInterval);
+}
+
+function hideIndicator() {
+  indicator.hide();
+  clearInterval(indicatorInterval);
 }

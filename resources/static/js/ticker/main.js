@@ -1,5 +1,6 @@
 am4core.useTheme(am4themes_animated);
 am4core.options.minPolylineStep = 5;
+am4core.options.queue = true;
 
 const app = Vue.createApp({
     delimiters: ["[[", "]]"],
