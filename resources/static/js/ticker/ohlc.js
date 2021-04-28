@@ -1,8 +1,6 @@
 function createOhlcChart(tickerOhlc) {
     let ohlcChart = am4core.create("ohlc", am4charts.XYChart);
 
-    ohlcChart.svgContainer.autoResize = false;
-
     ohlcChart.dateFormatter.inputDateFormat = "YYYY-MM-DDTHH:mm:ss.sssZ";
     ohlcChart.dateFormatter.timezoneOffset = 0;
 
