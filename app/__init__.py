@@ -7,6 +7,7 @@ from flask import Flask
 from flask_assets import Environment
 from flask_caching import Cache
 from flask_login import LoginManager
+from flask_cachebuster import CacheBuster
 from pymysql import install_as_MySQLdb
 
 from app.config import Config
@@ -34,6 +35,13 @@ def create_app():
 
     assets = Environment()
     assets.init_app(app)
+
+    extensions_config = {
+        "extensions": [".js", ".css", ".ico", ".jpeg", ".jpg", ".png", ".gif"],
+        "hash_size": 5,
+    }
+    cache_buster = CacheBuster(config=extensions_config)
+    cache_buster.init_app(app)
 
     install_as_MySQLdb()
     db.init_app(app)

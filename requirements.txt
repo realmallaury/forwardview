@@ -20,8 +20,9 @@ datetime==4.3; python_version >= "3.5"
 decorator==5.0.7; python_version >= "3.7"
 defusedxml==0.7.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 entrypoints==0.3; python_version >= "3.6"
-finvizfinance==0.9.6; python_version >= "3.5"
+finvizfinance==0.9.7; python_version >= "3.5"
 flask-assets==2.0
+flask-cachebuster==1.0.0
 flask-caching==1.10.1; python_version >= "3.5"
 flask-login==0.5.0
 flask-sqlalchemy==2.5.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
@@ -62,7 +63,7 @@ prometheus-client==0.10.1; python_version >= "3.6" and python_full_version < "3.
 prompt-toolkit==3.0.18; python_full_version >= "3.6.1" and python_version >= "3.7"
 ptyprocess==0.7.0; os_name != "nt" and python_version >= "3.7" and sys_platform != "win32"
 py==1.10.0; python_version >= "3.6" and python_full_version < "3.0.0" and implementation_name == "pypy" or implementation_name == "pypy" and python_version >= "3.6" and python_full_version >= "3.4.0"
-pyarrow==3.0.0; python_version >= "3.6"
+pyarrow==4.0.0; python_version >= "3.6"
 pycparser==2.20; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
 pygments==2.8.1; python_version >= "3.7"
 pymysql==1.0.2; python_version >= "3.6"
@@ -72,7 +73,7 @@ python-dateutil==2.8.1; python_full_version >= "3.7.1" and python_version >= "3.
 python-dotenv==0.17.0
 pytz==2021.1; python_full_version >= "3.7.1" and python_version >= "3.5"
 pywin32==300; sys_platform == "win32" and python_version >= "3.6"
-pywinpty==0.5.7; os_name == "nt" and python_version >= "3.6"
+pywinpty==1.0.1; os_name == "nt" and python_version >= "3.6"
 pyzmq==22.0.3; python_full_version >= "3.6.1" and python_version >= "3.6"
 qtconsole==5.0.3; python_version >= "3.6"
 qtpy==1.9.0; python_version >= "3.6"
