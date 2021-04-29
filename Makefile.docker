@@ -3,6 +3,7 @@ LOCAL_ENV_PATH := $(PROVISION_PATH)/local
 DEPLOYMENT_ENV_PATH := $(PROVISION_PATH)/deployment
 FORWARDVIEW_IMAGE_NAME = forwardview:0.0.1
 DOWNLOADER_IMAGE_NAME = downloader:0.0.1
+NGINX_IMAGE_NAME = nginx-lets-encrypt
 
 .PHONY: build-app
 build-app:
@@ -18,6 +19,16 @@ build-downloader:
 		-t $(DOWNLOADER_IMAGE_NAME) \
 		-f $(PROVISION_PATH)/dockerfile.downloader \
 		.
+	@docker system prune -f
+
+.PHONY: build-nginx
+build-nginx:
+	DOCKER_BUILDKIT=1 docker build \
+		-t $(NGINX_IMAGE_NAME) \
+		-f $(PROVISION_PATH)/deployment/nginx/dockerfile.nginx \
+		--build-arg DOMAIN=forwardview.tech \
+		--build-arg EMAIL=cirko502@gmail.com \
+		$(PROVISION_PATH)/deployment/nginx/
 	@docker system prune -f
 
 ## LOCAL
