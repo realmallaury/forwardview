@@ -18,13 +18,13 @@
       <div class="col">
         <div class="row d-flex justify-content-between">
           <div class="col d-flex justify-content-start">
-            <div data-bs-toggle="tooltip" data-bs-placement="top" title="Order actions">
-              <button type="button" class="btn btn-outline-primary me-1" v-on:click="showOrderActions">
+            <div data-bs-toggle="tooltip" data-bs-placement="top" title="Order actions" style="padding-right: 2px;">
+              <button type="button" class="btn btn-outline-primary" v-on:click="showOrderActions">
                 <i class="bi bi-plus"></i>
               </button>
             </div>
 
-            <div data-bs-toggle="tooltip" data-bs-placement="top" title="Ticker info">
+            <div data-bs-toggle="tooltip" data-bs-placement="top" title="Ticker info" style="padding-right: 2px;">
               <button type="button" class="btn btn-outline-primary me-1" v-on:click="showTickerInfo">
                 <i class="bi bi-info"></i>
               </button>
@@ -37,8 +37,12 @@
             </div>
           </div>
           <div class="col d-flex justify-content-center">
-            <button type="button" class="btn btn-outline-primary me-1" id="pills-tab-15min" v-on:click="updateOhlcChart('15min', 'false')">15 min</button>
-            <button type="button" class="btn btn-outline-primary me-1 active" id="pills-tab-60min" v-on:click="updateOhlcChart('60min', 'false')">1 h</button>
+            <div style="padding-right: 2px;">
+            <button type="button" class="btn btn-outline-primary" id="pills-tab-15min" v-on:click="updateOhlcChart('15min', 'false')">15 min</button>
+            </div>
+            <div style="padding-right: 2px;">
+              <button type="button" class="btn btn-outline-primary active" id="pills-tab-60min" v-on:click="updateOhlcChart('60min', 'false')">1 h</button>
+            </div>
             <button type="button" class="btn btn-outline-primary" id="pills-tab-1d" v-on:click="updateOhlcChart('1d', 'false')">Daily</button>
           </div>
           <div class="col d-flex justify-content-end">
@@ -62,7 +66,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Actions for: {{ ticker_data.get('ticker_name') }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           <div class="modal-body">
 
@@ -70,7 +76,7 @@
               <div class="col-5">
                 <form v-on:submit.prevent="placeOrder" action="" id="place-order-form">
                   <div class="mb-3">
-                    <select v-model="order.orderType" class="form-select" id="order_type" name="order_type" required>
+                    <select v-model="order.orderType" class="form-control" id="order_type" name="order_type" required>
                       <option selected disabled value="">Order type</option>
                       <option value="LONG">LONG</option>
                       <option value="SHORT">SHORT</option>
@@ -93,14 +99,14 @@
                 </form>
               </div>
               <div class="col">
-                <div id="ok-submit" class="alert alert-primary alert-dismissible fade show" role="alert" style="display: none;">
+                <div id="ok-submit" class="alert alert-dismissible alert-success" role="alert" style="display: none;">
                   <span id="ok-submit-msg"></span>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
                 </div>
 
-                <div id="error-submit" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+                <div id="error-submit" class="alert alert-dismissible alert-warning" role="alert" style="display: none;">
                   <span id="error-submit-msg"></span>
-                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
                 </div>
               </div>
             </div>
@@ -114,7 +120,9 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">{{ ticker_data.get('ticker_name') }}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
           </div>
           <div class="modal-body">
             <div class="row">
@@ -130,7 +138,7 @@
                     </div>
 
                     <br>
-                    <select class="form-select" v-on:change="updateRatiosChart($event)">
+                    <select class="form-control" v-on:change="updateRatiosChart($event)">
                       <option value="currentRatio">Liquidity - Can a company pay its short term liabilities with its current assets?</option>
                       <option value="cashConversionCycle">Liquidity - How many days it takes to convert goods and services into cash?</option>
 
