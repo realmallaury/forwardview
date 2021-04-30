@@ -50,18 +50,34 @@ const app = Vue.createApp({
 
     mounted() {
         axios
-            .get("/ticker-info.json")
+            .get(window.location.origin + "/ticker-info.json")
             .then(response => {
+                if (response.request.responseURL.includes("login")) {
+                    location.reload();
+                }
+
                 this.tickerInfoOverview = response.data.overview;
                 this.tickerInfoNews = response.data.news;
 
                 this.ratiosChart = createRatiosChart(this.tickerInfoOverview);
             })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
 
         axios
-            .get("/ticker.json?interval=" + this.interval)
+            .get(window.location.origin + "/ticker.json?interval=" + this.interval)
             .then(response => {
+                if (response.request.responseURL.includes("login")) {
+                    location.reload();
+                }
+
                 this.ohlcChart = createOhlcChart(response.data);
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
             })
     },
 

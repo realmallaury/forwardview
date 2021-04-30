@@ -174,6 +174,10 @@ function updateOhlcChart(ohlcChart, interval, next) {
     axios
         .get(url)
         .then(response => {
+            if (response.request.responseURL.includes("login")) {
+                location.reload();
+            }
+
             if (!_.isEqual(ohlcChart.data, response.data)) {
                 ohlcChart.data = response.data;
                 // ohlcChart.validateData();
@@ -209,6 +213,10 @@ function placeOrder(ohlcChart, order) {
     axios
         .post("/place-order", order)
         .then(response => {
+            if (response.request.responseURL.includes("login")) {
+                location.reload();
+            }
+
             $("#ok-submit-msg").text(response.data.message);
             $("#ok-submit").show();
             $("#error-submit").hide();
@@ -226,8 +234,12 @@ function placeOrder(ohlcChart, order) {
 
 function exitTrade(ohlcChart, order) {
     axios
-        .get("/exit-trade", order)
+        .get(window.location.origin + "/exit-trade", order)
         .then(response => {
+            if (response.request.responseURL.includes("login")) {
+                location.reload();
+            }
+
             $("#ok-submit-msg").text(response.data.message);
             $("#ok-submit").show();
             $("#error-submit").hide();
