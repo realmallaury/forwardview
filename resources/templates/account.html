@@ -14,7 +14,7 @@
           <div class="card-body">
 
             <div class="table-responsive">
-            <table class="table table-bordered text-center">
+            <table class="table table-bordered text-center text-nowrap">
               <thead>
               <tr>
                 <th scope="col">#</th>
@@ -39,7 +39,7 @@
                   <tr>
                     <th scope="row">{{ order.id }}</th>
                     <th scope="row">{{ order.ticker_name }}</th>
-                    <th scope="row">{{ order.entry_date|string + " - " + order.exit_date|string }}</th>
+                    <th scope="row">{{ order.entry_date.strftime('%d %b') + " - " + order.exit_date.strftime('%d %b %Y') }}</th>
                     <th scope="row">{{ order.order_type }}</th>
                     <th scope="row">{{ order.order_size }}</th>
                     <th scope="row">{{ order.entry_price }}</th>
