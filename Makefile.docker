@@ -29,6 +29,7 @@ build-nginx:
 		--build-arg DOMAIN=forwardview.tech \
 		--build-arg EMAIL=cirko502@gmail.com \
 		$(PROVISION_PATH)/deployment/nginx/
+
 	@docker system prune -f
 
 ## LOCAL
