@@ -24,7 +24,7 @@ services:
     restart: unless-stopped
   downloader:
     container_name: downloader
-    image: downloader:0.0.1
+    image: downloader
     environment:
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@138.68.128.219:3308/forwardview
       - DATA_DIR=/forwardview-data
