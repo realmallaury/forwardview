@@ -24,6 +24,7 @@ pymysql = "*"
 waitress = "*"
 redis = "*"
 cryptography = "*"
+marshmallow_sqlalchemy = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

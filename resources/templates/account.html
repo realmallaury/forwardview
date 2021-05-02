@@ -39,7 +39,7 @@
                   <tr>
                     <th scope="row">{{ order.id }}</th>
                     <th scope="row">{{ order.ticker_name }}</th>
-                    <th scope="row">{{ order.entry_date.strftime('%d %b') + " - " + order.exit_date.strftime('%d %b %Y') }}</th>
+                    <th scope="row">{{ order.entry_date.strftime('%d %b') if order.entry_date }} - {{ order.exit_date.strftime('%d %b %Y') if order.exit_date }}</th>
                     <th scope="row">{{ order.order_type }}</th>
                     <th scope="row">{{ order.order_size }}</th>
                     <th scope="row">{{ order.entry_price }}</th>

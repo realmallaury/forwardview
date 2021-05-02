@@ -1,14 +1,15 @@
 version: "3.5"
 
 services:
-  forwardview-1:
-    container_name: forwardview-1
-    image: forwardview:0.0.1
+  yuno-1:
+    container_name: yuno-1
+    image: yuno
     restart: unless-stopped
     ports:
       - 5001:5001
     environment:
       - FLASK_ENV=production
+      - SECRET_KEY=vq_yhf01AI75qanpo{rp8CFiH&4ibbRvM2Uhb{xP
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
       - DATA_DIR=/forwardview-data
       - CACHE_TYPE=RedisCache
@@ -20,14 +21,15 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-  forwardview-2:
-    container_name: forwardview-2
-    image: forwardview:0.0.1
+  yuno-2:
+    container_name: yuno-2
+    image: yuno
     restart: unless-stopped
     ports:
       - 5002:5002
     environment:
       - FLASK_ENV=production
+      - SECRET_KEY=GPtdLuIR8IUe2q[/Git1UPkO7y/9/QjIaML}qsCA
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
       - DATA_DIR=/forwardview-data
       - CACHE_TYPE=RedisCache

@@ -1,7 +1,11 @@
+import json
+
+import numpy as np
+import pandas as pd
 from flask import session
 
 from app.db import db
-from app.db.models import Account, Order
+from app.db.models import Account, Order, OrderSchema
 
 
 class Accounts:
@@ -28,6 +32,29 @@ class Accounts:
 
     def get_accounts(self):
         return self.accounts
+
+    def get_order_history(self):
+        account_ids = [account.id for account in self.accounts]
+        orders = (
+            db.session.query(Order)
+            .filter(Order.account_id.in_(account_ids))
+            .filter(Order.exited_trade == True)
+            .all()
+        )
+
+        order_schema = OrderSchema()
+        order_history_df = pd.DataFrame.from_records(
+            [order_schema.dump(order) for order in orders]
+        )
+
+        summary = order_history_df.describe(include=[np.number])
+
+        order_history = {
+            "summary": json.loads(summary.to_json(orient="columns")),
+            "orders": order_history_df.reset_index().to_dict(orient="records"),
+        }
+
+        return order_history
 
     def place_order(self, order_data, df):
         if order_data.get("order_type") == "LONG":

@@ -234,7 +234,7 @@ function placeOrder(ohlcChart, order) {
 
 function exitTrade(ohlcChart, order) {
     axios
-        .get(window.location.origin + "/exit-trade", order)
+        .get("/exit-trade", order)
         .then(response => {
             if (response.request.responseURL.includes("login")) {
                 location.reload();

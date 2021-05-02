@@ -1,21 +1,21 @@
 PROVISION_PATH := $(CURDIR)/provision
 LOCAL_ENV_PATH := $(PROVISION_PATH)/local
 DEPLOYMENT_ENV_PATH := $(PROVISION_PATH)/deployment
-FORWARDVIEW_IMAGE_NAME = forwardview:0.0.1
-DOWNLOADER_IMAGE_NAME = downloader:0.0.1
+YUNO_IMAGE_NAME = yuno
+DOWNLOADER_IMAGE_NAME = downloader
 NGINX_IMAGE_NAME = nginx-lets-encrypt
 
 .PHONY: build-app
 build-app:
-	@docker image inspect $(FORWARDVIEW_IMAGE_NAME) 1>/dev/null || DOCKER_BUILDKIT=1 docker build \
-		-t $(FORWARDVIEW_IMAGE_NAME) \
+	DOCKER_BUILDKIT=1 docker build \
+		-t $(YUNO_IMAGE_NAME) \
 		-f $(PROVISION_PATH)/dockerfile.app \
 		.
 	@docker system prune -f
 
 .PHONY: build-downloader
 build-downloader:
-	@docker image inspect $(DOWNLOADER_IMAGE_NAME) 1>/dev/null || DOCKER_BUILDKIT=1 docker build \
+	DOCKER_BUILDKIT=1 docker build \
 		-t $(DOWNLOADER_IMAGE_NAME) \
 		-f $(PROVISION_PATH)/dockerfile.downloader \
 		.

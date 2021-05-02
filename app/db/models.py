@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from app.db import db
 
@@ -63,6 +64,12 @@ class Order(db.Model):
         self.baseline_profit_loss = round(
             (baseline_prices[1] - baseline_prices[0]) * self.order_size, 3
         )
+
+
+class OrderSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Order
+        load_instance = True
 
 
 class Ticker(db.Model):

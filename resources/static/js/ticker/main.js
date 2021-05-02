@@ -50,7 +50,7 @@ const app = Vue.createApp({
 
     mounted() {
         axios
-            .get(window.location.origin + "/ticker-info.json")
+            .get("/ticker-info.json")
             .then(response => {
                 if (response.request.responseURL.includes("login")) {
                     location.reload();
@@ -67,7 +67,7 @@ const app = Vue.createApp({
             })
 
         axios
-            .get(window.location.origin + "/ticker.json?interval=" + this.interval)
+            .get("/ticker.json?interval=" + this.interval)
             .then(response => {
                 if (response.request.responseURL.includes("login")) {
                     location.reload();
