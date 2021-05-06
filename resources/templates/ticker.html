@@ -25,13 +25,13 @@
             </div>
 
             <div data-bs-toggle="tooltip" data-bs-placement="top" title="Ticker info" style="padding-right: 2px;">
-              <button type="button" class="btn btn-outline-primary me-1" v-on:click="showTickerInfo">
+              <button type="button" class="btn btn-outline-primary" v-on:click="showTickerInfo">
                 <i class="bi bi-info"></i>
               </button>
             </div>
 
             <div data-bs-toggle="tooltip" data-bs-placement="top" title="New ticker">
-              <a type="button" class="btn btn-outline-primary me-1" href="/new-ticker">
+              <a type="button" class="btn btn-outline-primary" v-on:click="newTicker">
                 <i class="bi bi-arrow-repeat"></i>
               </a>
             </div>
@@ -46,7 +46,7 @@
             <button type="button" class="btn btn-outline-primary" id="pills-tab-1d" v-on:click="updateOhlcChart('1d', 'false')">Daily</button>
           </div>
           <div class="col d-flex justify-content-end">
-            <button type="button" class="btn btn-outline-primary" id="pills-right-tab" v-on:click="updateOhlcChart('60min', 'true')"><i class="bi bi-chevron-right"></i>
+            <button type="button" class="btn btn-outline-primary" id="pills-tab-right" v-if="hasNext" v-on:click="updateOhlcChart('60min', 'true')"><i class="bi bi-chevron-right"></i>
             </button>
           </div>
         </div>
@@ -76,7 +76,7 @@
               <div class="col-5">
                 <form v-on:submit.prevent="placeOrder" action="" id="place-order-form">
                   <div class="mb-3">
-                    <select v-model="order.orderType" class="form-control" id="order_type" name="order_type" required>
+                    <select v-model="order.orderType" v-on:change="onOrderTypeChange($event)" class="form-control" id="order_type" name="order_type" required>
                       <option selected disabled value="">Order type</option>
                       <option value="LONG">LONG</option>
                       <option value="SHORT">SHORT</option>
@@ -94,19 +94,18 @@
                   <div class="mb-3">
                     <input v-model="order.stopLoss" class="form-control" placeholder="Stop loss" id="stop_loss" name="stop_loss" type="number" step="any" min="0.1" data-bind="value:stop_loss" required>
                   </div>
-                  <button id="process-order" type="submit" class="btn btn-primary">Place order</button>
-                  <button v-on:click="exitTrade" type="button" class="btn btn-secondary me-1 float-end" id="exit-trade">Exit trade</button>
+
+                  <button v-if="!orderActive" id="process-order" type="submit" class="btn btn-primary">Place order</button>
+                  <button v-if="orderActive" v-on:click="exitTrade" type="button" class="btn btn-primary" id="exit-trade">Exit trade</button>
                 </form>
               </div>
               <div class="col">
                 <div id="ok-submit" class="alert alert-dismissible alert-success" role="alert" style="display: none;">
                   <span id="ok-submit-msg"></span>
-                  <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
                 </div>
 
                 <div id="error-submit" class="alert alert-dismissible alert-warning" role="alert" style="display: none;">
                   <span id="error-submit-msg"></span>
-                  <button type="button" class="close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
                 </div>
               </div>
             </div>
@@ -178,7 +177,7 @@
                     </div>
 
                     <div v-if="selectedRatio === 'returnOnEquity'">
-                      <a href="investopedia.com/terms/r/returnonequity.asp" target="_blank">Return on equity</a> is one of the <b>profitability indicators</b> that shows total return on equity capital and the firm’s ability to turn equity
+                      <a href="https://www.investopedia.com/terms/r/returnonequity.asp" target="_blank">Return on equity</a> is one of the <b>profitability indicators</b> that shows total return on equity capital and the firm’s ability to turn equity
                       investments into profits.
                     </div>
                   </div>

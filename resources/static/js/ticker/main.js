@@ -17,6 +17,7 @@ const app = Vue.createApp({
                 "takeProfit": "",
                 "stopLoss": "",
             },
+            orderActive: false,
         }
     },
 
@@ -39,12 +40,26 @@ const app = Vue.createApp({
         },
         updateOhlcChart(interval, next) {
             updateOhlcChart(this.ohlcChart, interval, next);
+
+            let lastElement = this.ohlcChart.data[this.ohlcChart.data.length -1];
+            this.orderActive = lastElement["TAKE_PROFIT"] != null && lastElement["STOP_LOSS"] != null;
         },
         placeOrder() {
             placeOrder(this.ohlcChart, this.order);
         },
         exitTrade() {
             exitTrade();
+        },
+        newTicker() {
+            exitTrade();
+            location.href = "/new-ticker";
+        },
+        onOrderTypeChange(event) {
+            if(event.target.value === "SHORT") {
+                $("#price").prop( "disabled", true );
+            } else {
+                $("#price").prop( "disabled", false );
+            }
         }
     },
 
@@ -72,6 +87,9 @@ const app = Vue.createApp({
                 if (response.request.responseURL.includes("login")) {
                     location.reload();
                 }
+
+                let lastElement = response.data[response.data.length -1];
+                this.orderActive = lastElement["TAKE_PROFIT"] != null && lastElement["STOP_LOSS"] != null;
 
                 this.ohlcChart = createOhlcChart(response.data);
             })

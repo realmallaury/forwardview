@@ -164,14 +164,14 @@ function createOhlcChart(tickerOhlc) {
     return ohlcChart;
 }
 
-function updateOhlcChart(ohlcChart, interval, next) {
+async function updateOhlcChart(ohlcChart, interval, next) {
     let tabs = ["#pills-tab-15min", "#pills-tab-60min", "#pills-tab-1d"]
     let url = "/ticker.json?interval=" + interval;
     if (next === "true") {
         url = url + "&next=true";
     }
 
-    axios
+    return await axios
         .get(url)
         .then(response => {
             if (response.request.responseURL.includes("login")) {
@@ -205,8 +205,10 @@ function updateOhlcChart(ohlcChart, interval, next) {
                         $(item).toggleClass("active");
                     }
                 });
+            } else {
+                $("#pills-tab-right").prop( "disabled", true );
             }
-        })
+        });
 }
 
 function placeOrder(ohlcChart, order) {
