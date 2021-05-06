@@ -98,31 +98,24 @@ def get_ticker_ohcl():
         session["ticker_data"] = ticker_data
         holdout_period = max(holdout_period - 1, 0)
 
-    cache_key = "ticker-info-%s-%s-%s" % (ticker_name, interval, holdout_period)
-    result = cache.get(cache_key)
-    if result:
-        return result
-    else:
-        tickers = Tickers(ticker_name)
-        ohlc = OHLC(tickers.ticker)
+    tickers = Tickers(ticker_name)
+    ohlc = OHLC(tickers.ticker)
 
-        order_data = session.get("order_data")
-        order_data.update(
-            {
-                "holdout_period": holdout_period,
-            }
-        )
-        session["order_data"] = order_data
+    order_data = session.get("order_data")
+    order_data.update(
+        {
+            "holdout_period": holdout_period,
+        }
+    )
+    session["order_data"] = order_data
 
-        if order_data.get("order_placed") and not order_data.get("exited_trade"):
-            acc = Accounts(current_user)
-            df = ohlc.get_ticker_ohlc("60min", holdout_period)
-            acc.process_order(order_data, df)
+    if order_data.get("order_placed") and not order_data.get("exited_trade"):
+        acc = Accounts(current_user)
+        df = ohlc.get_ticker_ohlc("60min", holdout_period)
+        acc.process_order(order_data, df)
 
-        df = ohlc.get_ticker_ohlc(interval, holdout_period, order_data)
-        result = df.reset_index().to_json(orient="records", date_format="iso")
-
-        cache.set(cache_key, result)
+    df = ohlc.get_ticker_ohlc(interval, holdout_period, order_data)
+    result = df.reset_index().to_json(orient="records", date_format="iso")
 
     return result
 

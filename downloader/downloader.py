@@ -125,7 +125,7 @@ class Downloader:
                 clean_ticker_list(self.session(), query_date, False)
 
                 # clean tickers that are older than 5 days and are downloaded
-                query_date = (datetime.now() - relativedelta(days=5)).date()
+                query_date = (datetime.now() - relativedelta(days=10)).date()
                 clean_ticker_list(self.session(), query_date, True)
 
                 logging.info(
@@ -193,7 +193,7 @@ class Downloader:
             try:
                 start_time = datetime.now()
 
-                cleanup_folders(self.base_path, 7)
+                cleanup_folders(self.base_path, 11)
 
                 logging.info(
                     "finished cleaning up downloaded tickers, duration: %s sec"

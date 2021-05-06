@@ -47,10 +47,28 @@ class Accounts:
             [order_schema.dump(order) for order in orders]
         )
 
-        summary = order_history_df.describe(include=[np.number])
+        order_history_df["profit_loss_as_percentage_of_account"] = (
+            order_history_df["profit_loss"] / order_history_df["account_total"]
+        ) * 100
+
+        order_history_df["baseline_profit_loss_as_percentage_of_account"] = (
+            order_history_df["baseline_profit_loss"] / order_history_df["account_total"]
+        ) * 100
+
+        order_history_df["total_order_as_percentage_of_account"] = (
+            (order_history_df["entry_price"] * order_history_df["order_size"])
+            / order_history_df["account_total"]
+        ) * 100
+
+        order_history_df = order_history_df.round(
+            {
+                "profit_loss_as_percentage_of_account": 2,
+                "baseline_profit_loss_as_percentage_of_account": 2,
+                "total_order_as_percentage_of_account": 2,
+            }
+        )
 
         order_history = {
-            "summary": json.loads(summary.to_json(orient="columns")),
             "orders": order_history_df.reset_index().to_dict(orient="records"),
         }
 

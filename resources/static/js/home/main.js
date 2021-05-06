@@ -6,11 +6,16 @@ const app = Vue.createApp({
     data() {
         return {
             orders: null,
-            summary: null,
+            chartType: "accountTotal",
         }
     },
 
-    methods: {},
+    methods: {
+        updateOverviewChart(event) {
+            this.chartType = event.target.value;
+            updateOverviewChart(this.overviewChart, this.chartType);
+        },
+    },
 
     mounted() {
         axios
@@ -21,9 +26,8 @@ const app = Vue.createApp({
                 }
 
                 this.orders = response.data.orders;
-                this.summary = response.data.summary;
 
-                this.ordersChart = createOrdersChart(this.orders);
+                this.overviewChart = createOverviewChart(this.orders);
             })
             .catch(function (error) {
                 // handle error
@@ -38,17 +42,17 @@ const app = Vue.createApp({
 
 app.mount("#home");
 
-function createOrdersChart(orders) {
-    let ordersChart = am4core.create("orders", am4charts.XYChart);
+function createOverviewChart(orders) {
+    let overviewChart = am4core.create("orders", am4charts.XYChart);
 
-    var xAxis = ordersChart.xAxes.push(new am4charts.ValueAxis());
+    var xAxis = overviewChart.xAxes.push(new am4charts.ValueAxis());
     xAxis.renderer.labels.template.disabled = true;
     xAxis.title.text = "Orders over time";
 
-    var yAxis = ordersChart.yAxes.push(new am4charts.ValueAxis());
-    yAxis.title.text = "Amount ($)";
+    var yAxis = overviewChart.yAxes.push(new am4charts.ValueAxis());
+    yAxis.title.text = "Total account amount ($)";
 
-    var series = ordersChart.series.push(new am4charts.LineSeries());
+    var series = overviewChart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "account_total";
     series.dataFields.valueX = "index";
     series.strokeWidth = 3;
@@ -58,27 +62,39 @@ function createOrdersChart(orders) {
     var range = yAxis.createSeriesRange(series);
     range.value = 0;
     range.endValue = -1000;
-    range.contents.stroke = ordersChart.colors.getIndex(4);
+    range.contents.stroke = overviewChart.colors.getIndex(4);
     range.contents.fill = range.contents.stroke;
     range.contents.strokeOpacity = 0.7;
     range.contents.fillOpacity = 0.1;
 
-    ordersChart.cursor = new am4charts.XYCursor();
-    ordersChart.cursor.xAxis = xAxis;
-    ordersChart.scrollbarX = new am4core.Scrollbar();
+    overviewChart.cursor = new am4charts.XYCursor();
+    overviewChart.cursor.xAxis = xAxis;
+    overviewChart.scrollbarX = new am4core.Scrollbar();
 
     series.tooltip.getFillFromObject = false;
     series.tooltip.adapter.add("x", (x, target)=>{
         if(series.tooltip.tooltipDataItem.valueY < 0){
-            series.tooltip.background.fill = ordersChart.colors.getIndex(4);
+            series.tooltip.background.fill = overviewChart.colors.getIndex(4);
         }
         else{
-            series.tooltip.background.fill = ordersChart.colors.getIndex(0);
+            series.tooltip.background.fill = overviewChart.colors.getIndex(0);
         }
         return x;
     });
 
-    ordersChart.data = orders;
+    overviewChart.data = orders;
 
-    return ordersChart;
+    return overviewChart;
+}
+
+function updateOverviewChart(overviewChart, chartType) {
+    if (chartType === "accountTotal") {
+        overviewChart.series.getIndex(0).dataFields.valueY = "account_total";
+        overviewChart.yAxes.getIndex(0).title.text = "Total account amount after each trade ($)";
+    } else if (chartType === "profitLoss") {
+        overviewChart.series.getIndex(0).dataFields.valueY = "profit_loss";
+        overviewChart.yAxes.getIndex(0).title.text = "Profit / loss on each trade ($)";
+    }
+
+    overviewChart.validateData();
 }
