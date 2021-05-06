@@ -164,14 +164,14 @@ function createOhlcChart(tickerOhlc) {
     return ohlcChart;
 }
 
-async function updateOhlcChart(ohlcChart, interval, next) {
+function updateOhlcChart(ohlcChart, interval, next) {
     let tabs = ["#pills-tab-15min", "#pills-tab-60min", "#pills-tab-1d"]
     let url = "/ticker.json?interval=" + interval;
     if (next === "true") {
         url = url + "&next=true";
     }
 
-    return await axios
+    axios
         .get(url)
         .then(response => {
             if (response.request.responseURL.includes("login")) {
@@ -222,8 +222,6 @@ function placeOrder(ohlcChart, order) {
             $("#ok-submit-msg").text(response.data.message);
             $("#ok-submit").show();
             $("#error-submit").hide();
-
-            updateOhlcChart(ohlcChart, "60min", "true");
         })
         .catch(function (error) {
             if (error.response) {
