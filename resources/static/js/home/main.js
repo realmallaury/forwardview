@@ -7,6 +7,8 @@ const app = Vue.createApp({
         return {
             orders: null,
             chartType: "accountTotal",
+            currentPage: 1,
+            pages: [],
         }
     },
 
@@ -15,6 +17,23 @@ const app = Vue.createApp({
             this.chartType = event.target.value;
             updateOverviewChart(this.overviewChart, this.chartType);
         },
+        updateCurrentPage(page) {
+            this.currentPage = page;
+            axios
+                .get("/order-history.json?page=" + page)
+                .then(response => {
+                    if (response.request.responseURL.includes("login")) {
+                        location.reload();
+                    }
+
+                    this.orders = response.data.orders;
+                    this.overviewChart.data = this.orders;
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+        }
     },
 
     mounted() {
@@ -26,6 +45,10 @@ const app = Vue.createApp({
                 }
 
                 this.orders = response.data.orders;
+                this.currentPage = response.data.page;
+
+                let totalPages = Math.ceil(parseInt(response.data.total) / parseInt(response.data.per_page));
+                this.pages = Array.from({length: totalPages}, (x, i) => i + 1);
 
                 this.overviewChart = createOverviewChart(this.orders);
             })
@@ -42,12 +65,21 @@ const app = Vue.createApp({
 
 app.mount("#home");
 
+app.config.globalProperties.$filters = {
+    formatNumber(value) {
+        return Number(value).toFixed(2);
+    },
+    formatDate(value, format) {
+        return moment(value).format(format);
+    }
+}
+
 function createOverviewChart(orders) {
     let overviewChart = am4core.create("orders", am4charts.XYChart);
 
     var xAxis = overviewChart.xAxes.push(new am4charts.ValueAxis());
     xAxis.renderer.labels.template.disabled = true;
-    xAxis.title.text = "Orders over time";
+    xAxis.title.text = "Orders recent to older";
 
     var yAxis = overviewChart.yAxes.push(new am4charts.ValueAxis());
     yAxis.title.text = "Total account amount ($)";
@@ -72,11 +104,10 @@ function createOverviewChart(orders) {
     overviewChart.scrollbarX = new am4core.Scrollbar();
 
     series.tooltip.getFillFromObject = false;
-    series.tooltip.adapter.add("x", (x, target)=>{
-        if(series.tooltip.tooltipDataItem.valueY < 0){
+    series.tooltip.adapter.add("x", (x, target) => {
+        if (series.tooltip.tooltipDataItem.valueY < 0) {
             series.tooltip.background.fill = overviewChart.colors.getIndex(4);
-        }
-        else{
+        } else {
             series.tooltip.background.fill = overviewChart.colors.getIndex(0);
         }
         return x;
@@ -94,6 +125,12 @@ function updateOverviewChart(overviewChart, chartType) {
     } else if (chartType === "profitLoss") {
         overviewChart.series.getIndex(0).dataFields.valueY = "profit_loss";
         overviewChart.yAxes.getIndex(0).title.text = "Profit / loss on each trade ($)";
+    } else if (chartType === "profitLossPtc") {
+        overviewChart.series.getIndex(0).dataFields.valueY = "profit_loss_as_percentage_of_account";
+        overviewChart.yAxes.getIndex(0).title.text = "Profit / loss on each trade a % of account";
+    } else if (chartType === "riskPtc") {
+        overviewChart.series.getIndex(0).dataFields.valueY = "risk_as_percentage_of_account";
+        overviewChart.yAxes.getIndex(0).title.text = "Risk as a % of account";
     }
 
     overviewChart.validateData();

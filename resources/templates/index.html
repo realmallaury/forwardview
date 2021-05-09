@@ -6,94 +6,100 @@
 
   <div class="row justify-content-center">
     <div class="col-11">
-      <h4>Account summary</h4>
+      <h4>Account summary | Total amount: {{ "%.2f"|format(current_amount) }}$ | Return: {{ "%.2f"|format(return_ptc) }}%</h4>
       <hr>
     </div>
-    <div class="col-sm-7">
-      <select class="form-control" v-on:change="updateOverviewChart($event)">
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-auto align-self-center">
+      <a href="#" type="button"
+         v-bind:class="[index + 1 === currentPage ? 'btn btn-outline-primary active' : 'btn btn-outline-primary']"
+         style="margin-right: 2px;" v-for="(page, index) in pages"
+      @click.prevent="updateCurrentPage(page)">
+        [[ page ]]
+      </a>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="row justify-content-center">
+    <div class="col-sm-8">
+      <select class="form-control w-auto" v-on:change="updateOverviewChart($event)">
         <option value="accountTotal">Account total - how well are you performing over time?</option>
         <option value="profitLoss">Profit/loss - how much you make/lose on each trade?</option>
+        <option value="profitLossPtc">Profit/loss as % of account - how much you make/lose on each trade as a percentage
+          of your account?
+        </option>
+        <option value="riskPtc">Risk - how much you risk on each trade as a percentage of your account?</option>
       </select>
       <br>
 
       <div id="orders" style="height: 500px;"></div>
     </div>
 
-    <div class="col-sm-4">
+    <div class="col-sm-3">
       <div>
         <div v-if="chartType === 'accountTotal'">
           The graph represent your total account value after each trade.
         </div>
       </div>
     </div>
+  </div>
 
+  <div class="row justify-content-center">
     <div class="col-11" style="padding-top: 50px;">
       <h4>Orders history</h4>
       <hr>
     </div>
     <div class="col-11">
-      {% for account in accounts %}
-      <div class="card">
-        <div class="card-header">
-          {{ 'Account active' if account.active else 'Account closed' }}
-          <br>
-          Total amount: {{ account.current_amount }} |
-          Return: {{ account.return_ptc }}%
-        </div>
-        <div class="card-body">
 
-          <div class="table-responsive">
-            <table class="table table-bordered text-center text-nowrap">
-              <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Ticker name</th>
-                <th scope="col">Trade range</th>
-                <th scope="col">Order type</th>
-                <th scope="col">Order size</th>
-                <th scope="col">Entry Price</th>
-                <th scope="col">Take profit</th>
-                <th scope="col">Stop loss</th>
-                <th scope="col">Exit price</th>
-                <th scope="col">Baseline P/L</th>
-                <th scope="col">P/L</th>
-                <th scope="col">P/L * risk</th>
-                <th scope="col">Risk % acc</th>
-                <th scope="col">Account total</th>
-                <th scope="col">Order filled / Exited</th>
-              </tr>
-              </thead>
-              <tbody>
-              {% for order in account.orders %}
-              <tr>
-                <th scope="row">{{ order.id }}</th>
-                <th scope="row">{{ order.ticker_name }}</th>
-                <th scope="row">{{ order.entry_date.strftime('%d %b') if order.entry_date }} -
-                  {{ order.exit_date.strftime('%d %b %Y') if order.exit_date }}
-                </th>
-                <th scope="row">{{ order.order_type }}</th>
-                <th scope="row">{{ order.order_size }}</th>
-                <th scope="row">{{ order.entry_price }}</th>
-                <th scope="row">{{ order.take_profit }}</th>
-                <th scope="row">{{ order.stop_loss }}</th>
-                <th scope="row">{{ order.exit_price }}</th>
-                <th scope="row">{{ order.baseline_profit_loss }}</th>
-                <th scope="row">{{ order.profit_loss }}</th>
-                <th scope="row">{{ order.get_profit_loss_multiple_of_risk()|string + "*" + order.risk|string }}</th>
-                <th scope="row">{{ order.risk_as_percentage_of_account|string + "%" }}</th>
-                <th scope="row">{{ order.account_total }}</th>
-                <th scope="row">{{ order.order_filled|string + "/" + order.exited_trade|string }}</th>
-              </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          </div>
+      <div class="table-responsive">
+        <table class="table table-bordered text-center text-nowrap">
+          <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Ticker name</th>
+            <th scope="col">Trade range</th>
+            <th scope="col">Order type</th>
+            <th scope="col">Order size</th>
+            <th scope="col">Entry Price</th>
+            <th scope="col">Take profit</th>
+            <th scope="col">Stop loss</th>
+            <th scope="col">Exit price</th>
+            <th scope="col">Baseline P/L</th>
+            <th scope="col">P/L</th>
+            <th scope="col">P/L * risk</th>
+            <th scope="col">Risk % acc</th>
+            <th scope="col">Account total</th>
+            <th scope="col">Order filled / Exited</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="order in orders">
+            <th scope="row">[[ order.id ]]</th>
+            <th scope="row">[[ order.ticker_name ]]</th>
+            <th scope="row">[[ $filters.formatDate(order.entry_date, "Do MMM") ]] - [[ $filters.formatDate(order.exit_date, "Do MMM YYYY") ]]</th>
+            <th scope="row">[[ order.order_type ]]</th>
+            <th scope="row">[[ order.order_size ]]</th>
+            <th scope="row">[[ $filters.formatNumber(order.entry_price) ]]</th>
+            <th scope="row">[[ $filters.formatNumber(order.take_profit) ]]</th>
+            <th scope="row">[[ $filters.formatNumber(order.stop_loss) ]]</th>
+            <th scope="row">[[ $filters.formatNumber(order.exit_price) ]]</th>
+            <th scope="row">[[ $filters.formatNumber(order.baseline_profit_loss) ]]</th>
+            <th scope="row">[[ $filters.formatNumber(order.profit_loss) ]]</th>
+            <th scope="row">[[ order.profit_loss_as_a_multiple_of_risk ]] * [[ order.risk ]]</th>
+            <th scope="row">[[ order.risk_as_percentage_of_account ]]%</th>
+            <th scope="row">[[ $filters.formatNumber(order.account_total) ]]</th>
+            <th scope="row">[[ order.order_filled ]] / [[ order.exited_trade ]]</th>
+          </tr>
+          </tbody>
+        </table>
 
-        </div>
       </div>
-      {% endfor %}
-    </div>
 
+    </div>
   </div>
 </div>
 
@@ -103,6 +109,7 @@
 <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/plugins/annotation.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 <script src="{{ url_for('static', filename='js/home/main.js') }}"></script>
 
 {% endblock %}

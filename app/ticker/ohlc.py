@@ -1,5 +1,6 @@
 import pandas as pd
 
+from app import cache
 from app.ticker.indicators import atr, keltner_channel, macd
 from flask import current_app
 
@@ -20,14 +21,19 @@ class OHLC:
         self.daily_df = self._read_ticker_ohlc("1d")
 
     def get_ticker_ohlc(self, interval, holdout_period, order_data=None):
-        if interval == "15min":
-            df = self.intraday_15min_df.copy()
-        elif interval == "60min":
-            df = self.intraday_60min_df.copy()
-        elif interval == "1d":
-            df = self.daily_df.copy()
-        else:
-            df = self.intraday_60min_df.copy()
+        cache_key = "ticker-info-%s-%s" % (self.ticker.ticker_name, interval)
+        df = cache.get(cache_key)
+        if df is None:
+            if interval == "15min":
+                df = self.intraday_15min_df.copy()
+            elif interval == "60min":
+                df = self.intraday_60min_df.copy()
+            elif interval == "1d":
+                df = self.daily_df.copy()
+            else:
+                df = self.intraday_60min_df.copy()
+
+            cache.set(cache_key, df)
 
         working_dates = self._get_no_of_working_dates(df)
         cutoff_date = pd.to_datetime(

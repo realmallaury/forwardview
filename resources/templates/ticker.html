@@ -76,7 +76,7 @@
               <div class="col-5">
                 <form v-on:submit.prevent="placeOrder" action="" id="place-order-form">
                   <div class="mb-3">
-                    <select v-model="order.orderType" v-on:change="onOrderTypeChange($event)" class="form-control" id="order_type" name="order_type" required>
+                    <select v-model="order.orderType" v-on:change="onOrderTypeChange($event)" class="form-control w-auto" id="order_type" name="order_type" required>
                       <option selected disabled value="">Order type</option>
                       <option value="LONG">LONG</option>
                       <option value="SHORT">SHORT</option>

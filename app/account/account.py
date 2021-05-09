@@ -33,18 +33,36 @@ class Accounts:
     def get_accounts(self):
         return self.accounts
 
-    def get_order_history(self):
+    def check_current_amount(self, user):
+        if self.current_account.current_amount < 100:
+            self.current_account.active = False
+            account = Account(
+                user_id=user.id,
+                active=True,
+                initial_amount=10000.00,
+                current_amount=10000.00,
+                return_ptc=0,
+            )
+            db.session.add(account)
+            db.session.commit()
+
+    def get_order_history(self, page):
         account_ids = [account.id for account in self.accounts]
-        orders = (
+        page = (
             db.session.query(Order)
             .filter(Order.account_id.in_(account_ids))
-            .filter(Order.exited_trade == True)
-            .all()
+            .filter(Order.order_filled == True and Order.exited_trade == True)
+            .order_by(Order.id.desc())
+            .paginate(page=page, per_page=6, error_out=False)
         )
 
         order_schema = OrderSchema()
         order_history_df = pd.DataFrame.from_records(
-            [order_schema.dump(order) for order in orders]
+            [order_schema.dump(order) for order in page.items]
+        )
+
+        order_history_df["profit_loss_as_a_multiple_of_risk"] = (
+            order_history_df["profit_loss"] / order_history_df["risk"]
         )
 
         order_history_df["profit_loss_as_percentage_of_account"] = (
@@ -60,16 +78,13 @@ class Accounts:
             / order_history_df["account_total"]
         ) * 100
 
-        order_history_df = order_history_df.round(
-            {
-                "profit_loss_as_percentage_of_account": 2,
-                "baseline_profit_loss_as_percentage_of_account": 2,
-                "total_order_as_percentage_of_account": 2,
-            }
-        )
+        order_history_df = order_history_df.round(2)
 
         order_history = {
             "orders": order_history_df.reset_index().to_dict(orient="records"),
+            "page": page.page,
+            "per_page": page.per_page,
+            "total": page.total,
         }
 
         return order_history

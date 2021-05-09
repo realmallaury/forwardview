@@ -23,6 +23,9 @@ ticker = Blueprint("ticker", __name__)
 @login_required
 def get_ticker():
     if not session.get("ticker_data"):
+        acc = Accounts(current_user)
+        acc.check_current_amount(current_user)
+
         tickers = Tickers()
 
         if not tickers.ticker:
@@ -56,8 +59,10 @@ def get_ticker():
 @ticker.route("/new-ticker")
 @login_required
 def new_ticker():
-    tickers = Tickers()
+    acc = Accounts(current_user)
+    acc.check_current_amount(current_user)
 
+    tickers = Tickers()
     if not tickers.ticker:
         return render_template(
             "ticker.html",

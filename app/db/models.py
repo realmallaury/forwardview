@@ -3,6 +3,8 @@ from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from app.db import db
 
+db.metadata.clear()
+
 
 class User(UserMixin, db.Model):
     __tablename__ = "user"
@@ -64,6 +66,13 @@ class Order(db.Model):
         self.baseline_profit_loss = round(
             (baseline_prices[1] - baseline_prices[0]) * self.order_size, 3
         )
+
+
+class AccountSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Account
+        include_relationships = True
+        load_instance = True
 
 
 class OrderSchema(SQLAlchemyAutoSchema):
