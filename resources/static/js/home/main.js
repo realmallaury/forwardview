@@ -76,13 +76,15 @@ app.config.globalProperties.$filters = {
 
 function createOverviewChart(orders) {
     let overviewChart = am4core.create("orders", am4charts.XYChart);
+    overviewChart.numberFormatter.numberFormat = "$#,###";
 
     var xAxis = overviewChart.xAxes.push(new am4charts.ValueAxis());
     xAxis.renderer.labels.template.disabled = true;
-    xAxis.title.text = "Orders recent to older";
+    xAxis.title.text = "Recent orders -> older order";
+    xAxis.integersOnly = true;
+    xAxis.cursorTooltipEnabled = false;
 
     var yAxis = overviewChart.yAxes.push(new am4charts.ValueAxis());
-    yAxis.title.text = "Total account amount ($)";
 
     var series = overviewChart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "account_total";
@@ -121,16 +123,16 @@ function createOverviewChart(orders) {
 function updateOverviewChart(overviewChart, chartType) {
     if (chartType === "accountTotal") {
         overviewChart.series.getIndex(0).dataFields.valueY = "account_total";
-        overviewChart.yAxes.getIndex(0).title.text = "Total account amount after each trade ($)";
+        overviewChart.yAxes.getIndex(0).numberFormatter.numberFormat = "$#,###";
     } else if (chartType === "profitLoss") {
         overviewChart.series.getIndex(0).dataFields.valueY = "profit_loss";
-        overviewChart.yAxes.getIndex(0).title.text = "Profit / loss on each trade ($)";
+        overviewChart.numberFormatter.numberFormat = "$#,###";
     } else if (chartType === "profitLossPtc") {
         overviewChart.series.getIndex(0).dataFields.valueY = "profit_loss_as_percentage_of_account";
-        overviewChart.yAxes.getIndex(0).title.text = "Profit / loss on each trade a % of account";
+        overviewChart.numberFormatter.numberFormat = "#'%'";
     } else if (chartType === "riskPtc") {
         overviewChart.series.getIndex(0).dataFields.valueY = "risk_as_percentage_of_account";
-        overviewChart.yAxes.getIndex(0).title.text = "Risk as a % of account";
+        overviewChart.numberFormatter.numberFormat = "#'%'";
     }
 
     overviewChart.validateData();

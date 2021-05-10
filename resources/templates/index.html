@@ -12,6 +12,22 @@
   </div>
 
   <div class="row justify-content-center">
+    <div class="col-sm-11 w-auto">
+      <select class="form-control" v-on:change="updateOverviewChart($event)">
+        <option value="accountTotal">Account total - how well are you performing over time?</option>
+        <option value="profitLoss">Profit/loss - how much you make/lose on each trade?</option>
+        <option value="profitLossPtc">Profit/loss as % of account - how much you make/lose on each trade as a percentage
+          of your account?
+        </option>
+        <option value="riskPtc">Risk - how much you risk on each trade as a percentage of your account?</option>
+      </select>
+      <br>
+
+      <div id="orders" style="height: 500px;"></div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
     <div class="col-md-auto align-self-center">
       <a href="#" type="button"
          v-bind:class="[index + 1 === currentPage ? 'btn btn-outline-primary active' : 'btn btn-outline-primary']"
@@ -25,21 +41,7 @@
   <br>
 
   <div class="row justify-content-center">
-    <div class="col-sm-8">
-      <select class="form-control w-auto" v-on:change="updateOverviewChart($event)">
-        <option value="accountTotal">Account total - how well are you performing over time?</option>
-        <option value="profitLoss">Profit/loss - how much you make/lose on each trade?</option>
-        <option value="profitLossPtc">Profit/loss as % of account - how much you make/lose on each trade as a percentage
-          of your account?
-        </option>
-        <option value="riskPtc">Risk - how much you risk on each trade as a percentage of your account?</option>
-      </select>
-      <br>
-
-      <div id="orders" style="height: 500px;"></div>
-    </div>
-
-    <div class="col-sm-3">
+    <div class="col-sm-11">
       <div>
         <div v-if="chartType === 'accountTotal'">
           The graph represent your total account value after each trade.
