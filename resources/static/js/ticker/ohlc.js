@@ -64,12 +64,13 @@ function createOhlcChart(tickerOhlc) {
     valueAxis2.renderer.baseGrid.disabled = true;
     valueAxis2.renderer.inside = true;
     valueAxis2.renderer.labels.template.verticalCenter = "bottom";
-    valueAxis2.renderer.labels.template.padding(2, 2, 2, 2);
-    //valueAxis.renderer.maxLabelPosition = 0.95;
+    // valueAxis2.renderer.labels.template.padding(2, 2, 2, 2);
+    // valueAxis.renderer.maxLabelPosition = 0.95;
     valueAxis2.renderer.fontSize = "0.8em"
 
     valueAxis2.renderer.gridContainer.background.fill = am4core.color("#000000");
     valueAxis2.renderer.gridContainer.background.fillOpacity = 0.05;
+    valueAxis2.title.text = "MACD";
 
     var valueAxis3 = ohlcChart.yAxes.push(new am4charts.ValueAxis());
     valueAxis3.tooltip.disabled = true;
@@ -81,12 +82,13 @@ function createOhlcChart(tickerOhlc) {
     valueAxis3.renderer.baseGrid.disabled = true;
     valueAxis3.renderer.inside = true;
     valueAxis3.renderer.labels.template.verticalCenter = "bottom";
-    valueAxis3.renderer.labels.template.padding(2, 2, 2, 2);
+    // valueAxis3.renderer.labels.template.padding(2, 2, 2, 2);
     //valueAxis.renderer.maxLabelPosition = 0.95;
     valueAxis3.renderer.fontSize = "0.8em"
 
     valueAxis3.renderer.gridContainer.background.fill = am4core.color("#000000");
     valueAxis3.renderer.gridContainer.background.fillOpacity = 0.05;
+    valueAxis3.title.text = "Volume";
 
     var scrollbarX = new am4charts.XYChartScrollbar();
 

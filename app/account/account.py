@@ -48,9 +48,8 @@ class Accounts:
         page = (
             db.session.query(Order)
             .filter(Order.account_id.in_(account_ids))
-            .filter(Order.order_filled == True and Order.exited_trade == True)
-            .order_by(Order.id.desc())
-            .paginate(page=page, per_page=6, error_out=False)
+            .filter(Order.exited_trade == True)
+            .paginate(page=page, per_page=100, error_out=False)
         )
 
         order_schema = OrderSchema()

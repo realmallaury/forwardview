@@ -26,8 +26,8 @@ const app = Vue.createApp({
                         location.reload();
                     }
 
-                    this.orders = response.data.orders;
-                    this.overviewChart.data = this.orders;
+                    this.overviewChart.data = response.data.orders;
+                    this.orders = response.data.orders.reverse();
                 })
                 .catch(function (error) {
                     // handle error
@@ -44,13 +44,12 @@ const app = Vue.createApp({
                     location.reload();
                 }
 
-                this.orders = response.data.orders;
                 this.currentPage = response.data.page;
-
                 let totalPages = Math.ceil(parseInt(response.data.total) / parseInt(response.data.per_page));
                 this.pages = Array.from({length: totalPages}, (x, i) => i + 1);
 
-                this.overviewChart = createOverviewChart(this.orders);
+                this.overviewChart = createOverviewChart(response.data.orders);
+                this.orders = response.data.orders.reverse();
             })
             .catch(function (error) {
                 // handle error
@@ -80,11 +79,16 @@ function createOverviewChart(orders) {
 
     var xAxis = overviewChart.xAxes.push(new am4charts.ValueAxis());
     xAxis.renderer.labels.template.disabled = true;
-    xAxis.title.text = "Recent orders -> older order";
+    xAxis.title.text = "From older to recent orders";
     xAxis.integersOnly = true;
     xAxis.cursorTooltipEnabled = false;
+    xAxis.renderer.grid.template.disabled = true;
 
     var yAxis = overviewChart.yAxes.push(new am4charts.ValueAxis());
+    yAxis.renderer.gridContainer.background.fill = am4core.color("#000000");
+    yAxis.renderer.gridContainer.background.fillOpacity = 0.05;
+    yAxis.renderer.inside = true;
+    yAxis.renderer.labels.template.verticalCenter = "bottom";
 
     var series = overviewChart.series.push(new am4charts.LineSeries());
     series.dataFields.valueY = "account_total";
@@ -103,7 +107,9 @@ function createOverviewChart(orders) {
 
     overviewChart.cursor = new am4charts.XYCursor();
     overviewChart.cursor.xAxis = xAxis;
+
     overviewChart.scrollbarX = new am4core.Scrollbar();
+    overviewChart.scrollbarX.disabled = true;
 
     series.tooltip.getFillFromObject = false;
     series.tooltip.adapter.add("x", (x, target) => {
