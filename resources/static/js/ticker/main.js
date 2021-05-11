@@ -46,7 +46,6 @@ const app = Vue.createApp({
         },
         placeOrder() {
             placeOrder(this.ohlcChart, this.order);
-            updateOhlcChart(this.ohlcChart, "60min", "true");
         },
         exitTrade() {
             exitTrade();

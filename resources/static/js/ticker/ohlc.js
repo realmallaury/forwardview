@@ -224,6 +224,8 @@ function placeOrder(ohlcChart, order) {
             $("#ok-submit-msg").text(response.data.message);
             $("#ok-submit").show();
             $("#error-submit").hide();
+
+            updateOhlcChart(ohlcChart, "60min", "true");
         })
         .catch(function (error) {
             if (error.response) {
