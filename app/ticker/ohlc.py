@@ -93,25 +93,19 @@ class OHLC:
             else:
                 end_date = df.last_valid_index()
 
-            max = df["KELTNER_HBAND"].max()
-            min = df["KELTNER_LBAND"].min()
+            max_val = max(df["KELTNER_HBAND"].max(), df["high"].max())
+            min_val = min(df["KELTNER_LBAND"].min(), df["low"].min())
 
             if order_data.get("order_type") == "LONG":
-                if max > order_data.get("take_profit"):
-                    max = order_data.get("take_profit")
-
-                if min < order_data.get("stop_loss"):
-                    min = order_data.get("stop_loss")
+                max_val = min(max_val, order_data.get("take_profit"))
+                min_val = max(min_val, order_data.get("stop_loss"))
 
             elif order_data.get("order_type") == "SHORT":
-                if max > order_data.get("stop_loss"):
-                    max = order_data.get("stop_loss")
-
-                if min < order_data.get("take_profit"):
-                    min = order_data.get("take_profit")
+                max_val = min(max_val, order_data.get("stop_loss"))
+                min_val = max(min_val, order_data.get("take_profit"))
 
             date_mask = (start_date <= df.index) & (df.index <= end_date)
-            df.loc[date_mask, "TAKE_PROFIT"] = max
-            df.loc[date_mask, "STOP_LOSS"] = min
+            df.loc[date_mask, "TAKE_PROFIT"] = max_val
+            df.loc[date_mask, "STOP_LOSS"] = min_val
 
         return df
