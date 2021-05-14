@@ -17,12 +17,9 @@ cache = Cache()
 
 def create_app():
     base_path = os.path.abspath(os.getcwd())
-    resources_path = base_path + "/resources/"
 
     app = Flask(
         __name__,
-        template_folder="resources/templates",
-        static_folder="resources/static",
         instance_relative_config=False,
     )
 
