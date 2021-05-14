@@ -31,15 +31,15 @@ def create_app():
     load_dotenv(path.join(base_path, ".env"))
     app.config.from_object(Config)
 
-    assets = Environment()
-    assets.init_app(app)
-
     extensions_config = {
         "extensions": [".js", ".css", ".ico", ".jpeg", ".jpg", ".png", ".gif"],
         "hash_size": 5,
     }
     cache_buster = CacheBuster(config=extensions_config)
     cache_buster.init_app(app)
+
+    assets = Environment()
+    assets.init_app(app)
 
     install_as_MySQLdb()
     db.init_app(app)
