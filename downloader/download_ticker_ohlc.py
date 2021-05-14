@@ -175,12 +175,12 @@ def save_ticker_info(base_path, ticker, info):
 
 def alphavantage_api_key():
     api_keys = [
-        "GGW3SH4C64RDZ3B0",
-        "6TSSQK5WX9EO9YUG",
-        "SVJBVSR16G5VNSJ5",
-        "I8EZZM4OQ8RAUZMW",
-        "RTPA7UO4ZFNR8VKZ",
-        "J54PXNMMH1PNUPK9",
+        "ME5T4DLCCKNROA2K",
+        "5DL5JBASYKIMW6EB",
+        "9D7HFYVK9GFQ39HV",
+        "HDHFF8NR7BOZAOFV",
+        "BVQMPJOMXRFSMBNV",
+        "D1Z6HNUBD8VJMH4T",
     ]
 
     return random.choice(api_keys)

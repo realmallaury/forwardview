@@ -15,11 +15,10 @@
     <div class="col-sm-11 w-auto">
       <select class="form-control" v-on:change="updateOverviewChart($event)">
         <option value="accountTotal">Account total - how well are you performing over time?</option>
-        <option value="profitLoss">Profit/loss - how much you make/lose on each trade?</option>
-        <option value="profitLossPtc">Profit/loss as % of account - how much you make/lose on each trade as a percentage
-          of your account?
-        </option>
+        <option value="profitLossPtc">Profit/loss - how much you make/lose on each trade as a percentage of your account?</option>
+        <option value="profitLossVsBaselinePtc">Profit/loss vs baseline - is your strategy better than baseline on each trade?</option>
         <option value="riskPtc">Risk - how much you risk on each trade as a percentage of your account?</option>
+        <option value="orderSizePtc">Total order size - how big is each order as a percentage of your account?</option>
       </select>
       <br>
 
@@ -112,6 +111,9 @@
 <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 <script src="https://cdn.amcharts.com/lib/4/plugins/annotation.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-<script src="{{ url_for('static', filename='js/home/main.js') }}"></script>
+
+{% assets filters="jsmin", output="gen/home.js", "js/home/main.js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
 
 {% endblock %}

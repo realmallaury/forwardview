@@ -130,14 +130,25 @@ function updateOverviewChart(overviewChart, chartType) {
     if (chartType === "accountTotal") {
         overviewChart.series.getIndex(0).dataFields.valueY = "account_total";
         overviewChart.yAxes.getIndex(0).numberFormatter.numberFormat = "$#,###";
-    } else if (chartType === "profitLoss") {
+    }
+    else if (chartType === "profitLoss") {
         overviewChart.series.getIndex(0).dataFields.valueY = "profit_loss";
         overviewChart.numberFormatter.numberFormat = "$#,###";
-    } else if (chartType === "profitLossPtc") {
+    }
+    else if (chartType === "profitLossPtc") {
         overviewChart.series.getIndex(0).dataFields.valueY = "profit_loss_as_percentage_of_account";
         overviewChart.numberFormatter.numberFormat = "#'%'";
-    } else if (chartType === "riskPtc") {
+    }
+    else if (chartType === "profitLossVsBaselinePtc") {
+        overviewChart.series.getIndex(0).dataFields.valueY = "profit_loss_and_baseline_profit_loss_diff_as_percentage_of_account";
+        overviewChart.numberFormatter.numberFormat = "#'%'";
+    }
+    else if (chartType === "riskPtc") {
         overviewChart.series.getIndex(0).dataFields.valueY = "risk_as_percentage_of_account";
+        overviewChart.numberFormatter.numberFormat = "#'%'";
+    }
+    else if (chartType === "orderSizePtc") {
+        overviewChart.series.getIndex(0).dataFields.valueY = "total_order_as_percentage_of_account";
         overviewChart.numberFormatter.numberFormat = "#'%'";
     }
 

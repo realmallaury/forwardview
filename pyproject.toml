@@ -25,6 +25,7 @@ waitress = "*"
 redis = "*"
 cryptography = "*"
 marshmallow_sqlalchemy = "*"
+jsmin = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"

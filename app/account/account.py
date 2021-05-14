@@ -69,6 +69,13 @@ class Accounts:
             order_history_df["baseline_profit_loss"] / order_history_df["account_total"]
         ) * 100
 
+        order_history_df[
+            "profit_loss_and_baseline_profit_loss_diff_as_percentage_of_account"
+        ] = (
+            order_history_df["profit_loss_as_percentage_of_account"]
+            - order_history_df["baseline_profit_loss_as_percentage_of_account"]
+        )
+
         order_history_df["total_order_as_percentage_of_account"] = (
             (order_history_df["entry_price"] * order_history_df["order_size"])
             / order_history_df["account_total"]
