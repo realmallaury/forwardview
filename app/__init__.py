@@ -21,8 +21,8 @@ def create_app():
 
     app = Flask(
         __name__,
-        template_folder=resources_path + "templates",
-        static_folder=resources_path + "static",
+        template_folder="resources/templates",
+        static_folder="resources/static",
         instance_relative_config=False,
     )
 
