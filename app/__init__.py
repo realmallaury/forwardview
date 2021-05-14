@@ -7,7 +7,6 @@ from flask import Flask
 from flask_assets import Environment
 from flask_caching import Cache
 from flask_login import LoginManager
-from flask_cachebuster import CacheBuster
 from pymysql import install_as_MySQLdb
 
 from app.config import Config
