@@ -13,8 +13,8 @@ bs4==0.0.1; python_version >= "3.5"
 certifi==2020.12.5; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.5"
 cffi==1.14.5; implementation_name == "pypy" and python_version >= "3.6"
 chardet==4.0.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-click==7.1.2; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
-colorama==0.4.4; python_version >= "3.7" and python_full_version < "3.0.0" and sys_platform == "win32" or sys_platform == "win32" and python_version >= "3.7" and python_full_version >= "3.5.0"
+click==8.0.0; python_version >= "3.6"
+colorama==0.4.4; python_version >= "3.7" and python_full_version < "3.0.0" and platform_system == "Windows" and sys_platform == "win32" or platform_system == "Windows" and python_version >= "3.7" and python_full_version >= "3.5.0" and sys_platform == "win32"
 cryptography==3.4.7; python_version >= "3.6"
 datetime==4.3; python_version >= "3.5"
 decorator==5.0.7; python_version >= "3.7"
@@ -22,20 +22,19 @@ defusedxml==0.7.1; python_version >= "3.6" and python_full_version < "3.0.0" or 
 entrypoints==0.3; python_version >= "3.6"
 finvizfinance==0.9.8; python_version >= "3.5"
 flask-assets==2.0
-flask-cachebuster==1.0.0
 flask-caching==1.10.1; python_version >= "3.5"
 flask-login==0.5.0
 flask-sqlalchemy==2.5.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
-flask==1.1.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
+flask==2.0.0; python_version >= "3.6"
 greenlet==1.1.0; python_version >= "3" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3"
 idna==2.10; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-ipykernel==5.5.4; python_version >= "3.6"
+ipykernel==5.5.5; python_version >= "3.6"
 ipython-genutils==0.2.0; python_version >= "3.7"
 ipython==7.23.1; python_version >= "3.7"
 ipywidgets==7.6.3
-itsdangerous==1.1.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+itsdangerous==2.0.0; python_version >= "3.6"
 jedi==0.18.0; python_version >= "3.7"
-jinja2==2.11.3; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
+jinja2==3.0.0; python_version >= "3.6"
 jsmin==2.2.2
 jsonschema==3.2.0; python_version >= "3.5"
 jupyter-client==6.2.0; python_full_version >= "3.6.1" and python_version >= "3.6"
@@ -45,7 +44,7 @@ jupyter==1.0.0
 jupyterlab-pygments==0.1.2; python_version >= "3.6"
 jupyterlab-widgets==1.0.0; python_version >= "3.6"
 lxml==4.6.3; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.5"
-markupsafe==1.1.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+markupsafe==2.0.0; python_version >= "3.6"
 marshmallow-sqlalchemy==0.25.0; python_version >= "3.6"
 marshmallow==3.12.1; python_version >= "3.6"
 matplotlib-inline==0.1.2; python_version >= "3.7"
@@ -98,7 +97,7 @@ waitress==2.0.0; python_full_version >= "3.6.0"
 wcwidth==0.2.5; python_full_version >= "3.6.1" and python_version >= "3.6"
 webassets==2.0
 webencodings==0.5.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-werkzeug==1.0.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+werkzeug==2.0.0; python_version >= "3.6"
 widgetsnbextension==3.5.1
 yarl==1.6.3; python_version >= "3.6"
 zope.interface==5.4.0; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.5"
