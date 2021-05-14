@@ -1,14 +1,15 @@
 version: "2"
 
 services:
-#  forwardview-1:
-#    container_name: forwardview-1
-#    image: forwardview:0.0.1
+#  yuno-1:
+#    container_name: yuno-1
+#    image: yuno
 #    restart: unless-stopped
 #    ports:
 #      - 5001:5001
 #    environment:
 #      - FLASK_ENV=production
+#      - SECRET_KEY=testtesttest
 #      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
 #      - DATA_DIR=/forwardview-data
 #      - CACHE_TYPE=RedisCache
