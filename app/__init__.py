@@ -26,9 +26,6 @@ def create_app():
     load_dotenv(path.join(base_path, ".env"))
     app.config.from_object(Config)
 
-    assets = Environment()
-    assets.init_app(app)
-
     install_as_MySQLdb()
     db.init_app(app)
     try:
