@@ -7,6 +7,7 @@ class Config:
     # General Config
     FLASK_ENV = environ.get("FLASK_ENV")
     SECRET_KEY = environ.get("SECRET_KEY")
+    STATIC_DIR = environ.get("STATIC_DIR")
 
     # Flask-Caching related configs
     CACHE_TYPE = environ.get("CACHE_TYPE")

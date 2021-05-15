@@ -20,13 +20,15 @@ def create_app():
 
     app = Flask(
         __name__,
-        template_folder="resources/templates",
         static_folder="resources/static",
         instance_relative_config=False,
     )
 
     load_dotenv(path.join(base_path, ".env"))
     app.config.from_object(Config)
+
+    app.static_folder = app.config.get("STATIC_DIR")
+    Environment(app)
 
     install_as_MySQLdb()
     db.init_app(app)

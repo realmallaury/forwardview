@@ -218,9 +218,10 @@
   <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
   <script src="https://cdn.amcharts.com/lib/4/plugins/annotation.js"></script>
 
-  <script src="{{ url_for('static', filename='js/ticker/main.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/ticker/overview.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/ticker/ohlc.js') }}"></script>
+  {% assets filters="jsmin", output="gen/ticker.%(version)s.js",
+    "js/ticker/main.js", "js/ticker/overview.js", "js/ticker/ohlc.js" %}
+    <script type="text/javascript" src="{{ ASSET_URL }}"></script>
+  {% endassets %}
 
 {% endif %}
 {% endblock %}

@@ -10,6 +10,7 @@ services:
     environment:
       - FLASK_ENV=production
       - SECRET_KEY=vq_yhf01AI75qanpo{rp8CFiH&4ibbRvM2Uhb{xP
+      - STATIC_DIR=/static
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
       - DATA_DIR=/forwardview-data
       - CACHE_TYPE=RedisCache
@@ -17,6 +18,7 @@ services:
       - CACHE_DEFAULT_TIMEOUT=300
     volumes:
       - /home/forwardview-data/data:/forwardview-data
+      - /home/forwardview/static:/static
     command: waitress-serve --port=5001 --call app:create_app
     depends_on:
       mysql:
@@ -30,6 +32,7 @@ services:
     environment:
       - FLASK_ENV=production
       - SECRET_KEY=GPtdLuIR8IUe2q[/Git1UPkO7y/9/QjIaML}qsCA
+      - STATIC_DIR=/static
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
       - DATA_DIR=/forwardview-data
       - CACHE_TYPE=RedisCache
@@ -37,6 +40,7 @@ services:
       - CACHE_DEFAULT_TIMEOUT=300
     volumes:
       - /home/forwardview-data/data:/forwardview-data
+      - /home/forwardview/static:/static
     command: waitress-serve --port=5002 --call app:create_app
     depends_on:
       mysql:
@@ -79,3 +83,4 @@ services:
       - 443:443
     volumes:
       - /home/letsencrypt:/etc/letsencrypt
+      - /home/forwardview/static:/static
