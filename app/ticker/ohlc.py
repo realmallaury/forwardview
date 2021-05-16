@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from app import cache
@@ -40,7 +41,7 @@ class OHLC:
             working_dates[len(working_dates) - 1 - holdout_period]
         )
 
-        df = df[df.index < cutoff_date]
+        df = df[df.index.date < cutoff_date]
         df = self._add_indicators_to_ticker_ohlc(df)
 
         if df.size > 250:
@@ -104,7 +105,9 @@ class OHLC:
                 max_val = min(max_val, order_data.get("stop_loss"))
                 min_val = max(min_val, order_data.get("take_profit"))
 
-            date_mask = (start_date <= df.index) & (df.index <= end_date)
+            date_mask = (np.datetime64(start_date) <= df.index) & (
+                df.index <= np.datetime64(end_date)
+            )
             df.loc[date_mask, "TAKE_PROFIT"] = max_val
             df.loc[date_mask, "STOP_LOSS"] = min_val
 

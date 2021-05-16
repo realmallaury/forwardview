@@ -2,7 +2,7 @@ version: "3.5"
 services:
   downloader:
     container_name: downloader
-    image: downloader:0.0.1
+    image: downloader
     environment:
       - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
       - DATA_DIR=/forwardview-data

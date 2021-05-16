@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from flask import session
 
@@ -144,7 +145,7 @@ class Accounts:
 
             baseline_prices = order_data.get("baseline_prices")
 
-            df = df[df.index >= order_data.get("entry_date")]
+            df = df[df.index >= np.datetime64(order_data.get("entry_date"))]
             for date, row in df.iterrows():
                 current_prices = [
                     round(row["open"], 3),
@@ -239,7 +240,7 @@ class Accounts:
 
             baseline_prices = order_data.get("baseline_prices")
 
-            df = df[df.index >= order_data.get("entry_date")]
+            df = df[df.index.date >= np.datetime64(order_data.get("entry_date"))]
             for date, row in df.iterrows():
                 current_prices = [
                     round(row["open"], 3),

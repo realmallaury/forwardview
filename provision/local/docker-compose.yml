@@ -1,28 +1,28 @@
 version: "2"
 
 services:
-  yuno-1:
-    container_name: yuno-1
-    image: yuno
-    restart: unless-stopped
-    ports:
-      - 5001:5001
-    environment:
-      - FLASK_ENV=production
-      - SECRET_KEY=testtesttest
-      - STATIC_DIR=/static
-      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
-      - DATA_DIR=/forwardview-data
-      - CACHE_TYPE=RedisCache
-      - CACHE_REDIS_URL=redis://redis:6379/0
-      - CACHE_DEFAULT_TIMEOUT=300
-    volumes:
-      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
-      - /home/stipe/Documents/forwardview/static:/static
-    command: waitress-serve --port=5001 --call app:create_app
-    depends_on:
-      mysql:
-        condition: service_healthy
+#  yuno-1:
+#    container_name: yuno-1
+#    image: yuno
+#    restart: unless-stopped
+#    ports:
+#      - 5001:5001
+#    environment:
+#      - FLASK_ENV=production
+#      - SECRET_KEY=PhaPiC6Sn32gfIne$323L4TPM7E_3
+#      - STATIC_DIR=/static
+#      - SQLALCHEMY_DATABASE_URI=mysql+pymysql://root:pass@mysql:3306/forwardview
+#      - DATA_DIR=/forwardview-data
+#      - CACHE_TYPE=RedisCache
+#      - CACHE_REDIS_URL=redis://redis:6379/0
+#      - CACHE_DEFAULT_TIMEOUT=300
+#    volumes:
+#      - /home/stipe/Documents/forwardview-data/data:/forwardview-data
+#      - /home/stipe/Documents/forwardview/static:/static
+#    command: waitress-serve --port=5001 --call app:create_app
+#    depends_on:
+#      mysql:
+#        condition: service_healthy
   mysql:
     container_name: mysql
     image: mysql:8
@@ -52,13 +52,13 @@ services:
       test: [ "CMD", "redis-cli", "ping" ]
       timeout: 20s
       retries: 10
-  nginx:
-    container_name: nginx
-    image: nginx:alpine
-    restart: unless-stopped
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-        - ./nginx.conf:/etc/nginx/nginx.conf
-        - /home/stipe/Documents/forwardview/static:/static
+#  nginx:
+#    container_name: nginx
+#    image: nginx:alpine
+#    restart: unless-stopped
+#    ports:
+#      - 80:80
+#      - 443:443
+#    volumes:
+#        - ./nginx.conf:/etc/nginx/nginx.conf
+#        - /home/stipe/Documents/forwardview/static:/static
