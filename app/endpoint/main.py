@@ -18,14 +18,6 @@ def index():
     )
 
 
-@main.route("/account")
-@login_required
-def account():
-    acc = Accounts(current_user)
-    accounts = acc.get_accounts()
-    return render_template("account.html", name=current_user.name, accounts=accounts)
-
-
 @main.route("/order-history.json")
 @login_required
 def order_history():
@@ -40,4 +32,4 @@ def order_history():
 @main.route("/knowledgebase")
 @login_required
 def knowledgebase():
-    return render_template("knowledgebase.html")
+    return render_template("knowledgebase.html", name=current_user.name)

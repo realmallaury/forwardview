@@ -77,8 +77,8 @@ const app = Vue.createApp({
                 this.ratiosChart = createRatiosChart(this.tickerInfoOverview);
             })
             .catch(function (error) {
-                // handle error
                 console.log(error);
+                location.href = "/new-ticker";
             })
 
         axios
@@ -94,8 +94,8 @@ const app = Vue.createApp({
                 this.ohlcChart = createOhlcChart(response.data);
             })
             .catch(function (error) {
-                // handle error
                 console.log(error);
+                location.href = "/new-ticker";
             })
     },
 

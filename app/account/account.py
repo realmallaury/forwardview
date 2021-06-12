@@ -334,6 +334,9 @@ class Accounts:
             if take_profit <= stop_loss:
                 raise ValueError("LONG: take profit should be greater then stop loss.")
 
+            if entry_price <= stop_loss:
+                raise ValueError("LONG: stop loss should be less then entry price.")
+
             if self.current_account_total < (order_size * entry_price):
                 raise ValueError("LONG: total order is greater that current account.")
 

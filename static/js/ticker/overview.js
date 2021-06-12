@@ -1,5 +1,6 @@
 function createRatiosChart(tickerInfoOverview) {
     let ratiosChart = am4core.create("ratios", am4charts.XYChart);
+    ratiosChart.responsive.enabled = true;
     // Increase contrast by taking evey second color
     ratiosChart.colors.step = 2;
 

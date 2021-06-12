@@ -33,6 +33,7 @@ function createOhlcChart(tickerOhlc) {
     // height of axis
     valueAxis.height = am4core.percent(65);
 
+    valueAxis.renderer.grid.template.disabled = true;
     valueAxis.renderer.gridContainer.background.fill = am4core.color("#000000");
     valueAxis.renderer.gridContainer.background.fillOpacity = 0.05;
     valueAxis.renderer.inside = true;

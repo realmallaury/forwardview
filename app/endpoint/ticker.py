@@ -71,12 +71,14 @@ def new_ticker():
 
     ticker = tickers.ticker
 
+    session.pop("ticker_data")
     session["ticker_data"] = {
         "ticker_name": ticker.ticker_name,
         "day": 0,
         "max_days": 15,
     }
 
+    session.pop("order_data")
     session["order_data"] = {
         "ticker_name": ticker.ticker_name,
         "order_placed": False,

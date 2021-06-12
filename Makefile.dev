@@ -16,7 +16,7 @@ format: venv
 
 .PHONY: test
 test: venv
-	$(VENV)/python -m unittest
+	$(VENV)/python -m pytest
 
 .PHONY: clean
 clean: clean-venv

@@ -75,6 +75,7 @@ app.config.globalProperties.$filters = {
 
 function createOverviewChart(orders) {
     let overviewChart = am4core.create("orders", am4charts.XYChart);
+    overviewChart.responsive.enabled = true;
     overviewChart.numberFormatter.numberFormat = "$#,###";
 
     var xAxis = overviewChart.xAxes.push(new am4charts.ValueAxis());

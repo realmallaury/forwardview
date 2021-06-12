@@ -59,9 +59,6 @@ class Order(db.Model):
     order_filled = db.Column(db.Boolean, default=False, nullable=False)
     exited_trade = db.Column(db.Boolean, default=False, nullable=False)
 
-    def get_profit_loss_multiple_of_risk(self):
-        return round(self.profit_loss / self.risk, 2)
-
     def update_baseline_profit_loss(self, baseline_prices):
         self.baseline_profit_loss = round(
             (baseline_prices[1] - baseline_prices[0]) * self.order_size, 3
