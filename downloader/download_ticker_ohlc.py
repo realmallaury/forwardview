@@ -158,8 +158,10 @@ def get_ticker_ohlc(base_path, ticker):
 def cleanup_folders(base_path, older_than_days):
     folder_date = (datetime.now() - relativedelta(days=older_than_days)).date()
     for dir in os.listdir(base_path):
-        if os.path.isdir(dir) and datetime.strptime(dir, "%Y-%m-%d") < folder_date:
-            dir_path = path.join(base_path, dir)
+        dir_path = os.path.join(base_path, dir)
+        if datetime.strptime(dir, "%d-%m-%Y").date() < folder_date and os.path.isdir(
+            dir_path
+        ):
             shutil.rmtree(dir_path)
 
 
