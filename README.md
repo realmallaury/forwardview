@@ -1,2 +1,2 @@
 # forwardview
-Forward view training software.
+Forward view training demo.
